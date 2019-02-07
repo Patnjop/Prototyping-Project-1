@@ -7,12 +7,13 @@ public class Player
 {
     public int playerNumber;
     public string name;
-    public GameObject character;
+    public GameObject appearance;
+    public GameObject character; //Instantiated after object made
     
     public Player (int playerNo, string charName, GameObject charObject) // Add more
     {
         playerNumber = playerNo;
         name = charName;
-        character = charObject;
+        appearance = charObject;
     }
 }

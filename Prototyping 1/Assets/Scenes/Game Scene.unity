@@ -220,6 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bd85566edfc4d54c85685d621e600aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  holdDirectionTime: 2
 --- !u!4 &763974649
 Transform:
   m_ObjectHideFlags: 0
@@ -267,8 +268,8 @@ MonoBehaviour:
   spawnLocation:
   - {x: 0, y: 0}
   - {x: 9, y: 0}
-  - {x: 0, y: 9}
-  - {x: 9, y: 9}
+  - {x: 0, y: -9}
+  - {x: 9, y: -9}
   map: {fileID: 550637037}
   TurnManager: {fileID: 0}
 --- !u!114 &1372682655
@@ -287,18 +288,7 @@ MonoBehaviour:
   players:
   - playerNumber: 1
     name: Muffin
-    character: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
-      type: 3}
-  - playerNumber: 2
-    name: Grape
-    character: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
-      type: 3}
-  - playerNumber: 3
-    name: Balloon
-    character: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
-      type: 3}
-  - playerNumber: 4
-    name: King
+    appearance: {fileID: 0}
     character: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
       type: 3}
 --- !u!4 &1372682656

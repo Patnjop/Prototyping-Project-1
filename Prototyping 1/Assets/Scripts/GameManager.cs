@@ -32,10 +32,19 @@ public class GameManager : MonoBehaviour
         PlayerManager = GetComponent<PlayerManager>();
     }
 
-    public void SetGameData(List<Player> playerList)
+    public void SetGameData(List<Player> playerList) //Done in character creator
     {
         players = playerList;
         playerAmount = players.Count;
+    }
+
+    public List<Player> AddInstantiatedCharacters(List<GameObject> characterList)
+    {
+        for (int i = 0; i < characterList.Count; i++)
+        {
+            players[i].character = characterList[i];
+        }
+        return players;
     }
 
     public void StartGame(TurnManager turnManager)
@@ -47,5 +56,10 @@ public class GameManager : MonoBehaviour
     public int PlayerAmount()
     {
         return players.Count;
+    }
+
+    public PlayerManager PManager()
+    {
+        return PlayerManager;
     }
 }
