@@ -6,15 +6,17 @@ public class Rotater1 : MonoBehaviour
 {
     public List<GameObject> parts = new List<GameObject>();
     public string tagName;
-    Rotater rotater;
+    public Rotater rotater;
+    Rotater1 rotater1;
     int previousCount;
     int activeCount = 0;
     bool active;
+    public static bool selected = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        rotater = gameObject.GetComponent<Rotater>();
+        rotater1 = gameObject.GetComponent<Rotater1>();
         foreach (GameObject objects in GameObject.FindGameObjectsWithTag(tagName))
         {
             parts.Add(objects);
@@ -25,7 +27,17 @@ public class Rotater1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && active == true)
+        {
+            rotater1.enabled = false;
+            selected = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Backspace) && active == true)
+        {
+            rotater1.enabled = false;
+            rotater.enabled = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && active == false)
         {
             active = true;
         }

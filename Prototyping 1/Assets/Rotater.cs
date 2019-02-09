@@ -7,6 +7,7 @@ public class Rotater : MonoBehaviour
 {
     public List<GameObject> parts = new List<GameObject>();
     public string tagName;
+    public Rotater1 rotater1;
     Rotater rotater;
     int previousCount;
     int activeCount = 0;
@@ -54,6 +55,7 @@ public class Rotater : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             rotater.enabled = false;
+            rotater1.enabled = true;
         }
     }
 }
