@@ -26,7 +26,7 @@ public class Rotater : MonoBehaviour
     void Update()
     {
         parts[activeCount].SetActive(true);
-        if (Input.GetKeyDown("d"))
+        if (Input.GetKeyDown("joystick button 5"))
         {
             previousCount = activeCount;
             if (activeCount > 1)
@@ -39,7 +39,7 @@ public class Rotater : MonoBehaviour
             }
             parts[previousCount].SetActive(false);
         }
-        if (Input.GetKeyDown("a"))
+        if (Input.GetKeyDown("joystick button 4"))
         {
             previousCount = activeCount;
             if (activeCount < 1)
@@ -52,7 +52,7 @@ public class Rotater : MonoBehaviour
             }
             parts[previousCount].SetActive(false);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown("joystick button 0"))
         {
             rotater.enabled = false;
             rotater1.enabled = true;
