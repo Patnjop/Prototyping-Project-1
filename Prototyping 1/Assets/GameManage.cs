@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameManage : MonoBehaviour
 {
     public Rotater1 rotater1;
+    GameManage gameManage;
     public Text text;
     List<string> abilities = new List<string>();
     int count = 0;
@@ -13,6 +14,7 @@ public class GameManage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameManage = GetComponent<GameManage>();
         abilities.Add("Recoil");
         abilities.Add("Incendinary");
         abilities.Add("T-Shot");
@@ -25,6 +27,7 @@ public class GameManage : MonoBehaviour
         text.text = abilities[count];
         if (Input.GetKeyDown("joystick button 1") && Rotater1.selected == true)
         {
+            gameManage.enabled = false;
             rotater1.enabled = true;
         }
         if (Input.GetKeyDown("joystick button 5") && Rotater1.selected == true)
