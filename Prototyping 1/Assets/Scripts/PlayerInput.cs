@@ -24,7 +24,7 @@ public class PlayerInput : MonoBehaviour
 
     public void GetInput()
     {
-        Debug.Log("Activated");
+
         awaitingInput = true;
         moveList = new List<Move>();
         playerNumber = playerNumberInt.ToString();
@@ -63,7 +63,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (awaitingInput == true)
         {
-            Debug.Log("Awaiting input");
+
             if (Input.GetButtonDown("Joystick " + playerNumber + " Option 2"))//Pressed B
             {
                 Debug.Log("Cleared");
@@ -75,10 +75,10 @@ public class PlayerInput : MonoBehaviour
                 seconds = 0;
                 turnManager.IncrementInfo(playerNumberInt, turnsMade);
             }
-            Debug.Log(turnsMade + " :turns made");
+
             if (turnsMade < 3)
             {
-                Debug.Log("Move typed selected: " + moveTypeSelected);
+
                 if (moveTypeSelected == 0)
                 {
                     Debug.Log("Awaiting move choice");
@@ -95,7 +95,7 @@ public class PlayerInput : MonoBehaviour
                 }
                 else if (moveTypeSelected != 0)
                 {
-                    Debug.Log("Getting direction");
+
                     direction = GetAnalogDirection();
                     Debug.Log("Direction:" + direction);
 
@@ -109,6 +109,7 @@ public class PlayerInput : MonoBehaviour
 
                         if (seconds >= secondsTillSelect)
                         {
+                            Debug.Log("Null Ref Debug " + playerNumberInt + "," + turnsMade + "," + moveTypeSelected + "," + direction);
                             moveList.Add(new Move(playerNumberInt, turnsMade, moveTypeSelected, direction));
                             turnsMade += 1;
                             Debug.Log("Move added, moves made: " + turnsMade + " move type: " + moveTypeSelected + " direction: " + direction);

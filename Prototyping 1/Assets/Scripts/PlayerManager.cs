@@ -9,18 +9,19 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject map;
     public TurnManager TurnManager;
     private List<GameObject> bullets = new List<GameObject>(); // maybe make class??
+    [SerializeField]  private int aliveCount;
 
     public void SpawnPlayers(List<Player> playerList)
     {
         List<GameObject> activePlayers = new List<GameObject>();
-
+        Debug.Log("Spawning Players");
         foreach (Player p in playerList)
         {
             GameObject Player = Instantiate(p.character, spawnLocation[p.playerNumber - 1], Quaternion.identity);
             activePlayers.Add(Player);
         }
         players = GameManager.GM.AddInstantiatedCharacters(activePlayers);
-        Debug.Log("Called");
+        aliveCount = players.Count;
         TurnManager.StartRound();
     }
 
@@ -28,7 +29,7 @@ public class PlayerManager : MonoBehaviour
     {
         for (int i = 0; i < players.Count; i++) //Add objects
         {
-            if (check.position == players[i].character.transform.position)
+            if (check.position == players[i].character.transform.position && players[i].alive)
             {
                 return true;
             }
@@ -77,7 +78,7 @@ public class PlayerManager : MonoBehaviour
                         }
                         else
                         {
-                            Debug.Log("Player 1 blocked by item");
+                            Debug.Log("Player 1 blocked by item or dead");
                             //BLOCKED
                         }
                     }
@@ -181,7 +182,31 @@ public class PlayerManager : MonoBehaviour
 
     private void NextStep()
     {
-        TurnManager.EnterCombat();
+        
+        if (aliveCount > 1)
+        {
+            
+            TurnManager.EnterCombat();
+        }
+        else // FIX
+        {
+            Debug.Log("New Game!");
+            
+            GameManager.GM.NewGame();
+        }
+    }
+
+    private void KillPlayer(int playerNum)
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i].playerNumber == playerNum)
+            {
+                players[i].alive = false;
+                players[i].character.SetActive(false);
+                aliveCount -= 1;
+            }
+        }
     }
 
     private void CheckBulletPath(int dir, Transform check) //the direction, position
@@ -205,8 +230,8 @@ public class PlayerManager : MonoBehaviour
         {
             length = (int)(0 + posX);
         }
-
-        for (int i = 1; i < length; i++)
+        Debug.Log("Length = " + length);
+        for (int i = 1; i < length+1; i++)
         {
             if (dir == 1)
             {
@@ -214,7 +239,7 @@ public class PlayerManager : MonoBehaviour
                 {
                     if ((posY + i) == players[p].character.transform.position.y && posX == players[p].character.transform.position.x)
                     {
-                        //Dead
+                        KillPlayer(players[p].playerNumber);
                     }
                 }
             }
@@ -224,7 +249,7 @@ public class PlayerManager : MonoBehaviour
                 {
                     if ((posX + i) == players[p].character.transform.position.x && posY == players[p].character.transform.position.y)
                     {
-                        //Dead
+                        KillPlayer(players[p].playerNumber);
                     }
                 }
             }
@@ -234,7 +259,7 @@ public class PlayerManager : MonoBehaviour
                 {
                     if ((posY - i) == players[p].character.transform.position.x && posY == players[p].character.transform.position.y)
                     {
-                        //Dead
+                        KillPlayer(players[p].playerNumber);
                     }
                 }
             }
@@ -242,9 +267,15 @@ public class PlayerManager : MonoBehaviour
             {
                 for (int p = 0; p < players.Count; p++)
                 {
+
                     if ((posX - i) == players[p].character.transform.position.x && posY == players[p].character.transform.position.y)
                     {
-                        //Dead
+                        KillPlayer(players[p].playerNumber);
+                        Debug.Log("Success");
+                    }
+                    else
+                    {
+                        Debug.Log("Fail");
                     }
                 }
             }
@@ -264,9 +295,25 @@ public class PlayerManager : MonoBehaviour
         Invoke("NextStep", 0.5f);
     }
 
-    public Vector2 GetPlayerPos(int playerNum)
+    public Vector2 GetPlayerPos(int playerNum) // for UI
     {
         return players[playerNum].character.transform.position;
+    }
+
+    public bool PlayerAlive(int p)
+    {
+        
+        for (int i = 0; i < players.Count; i++)
+        {
+
+            if (players[i].playerNumber == p && players[i].alive == true)
+            {
+
+                return true;
+            }
+            
+        }
+        return false;
     }
 
 

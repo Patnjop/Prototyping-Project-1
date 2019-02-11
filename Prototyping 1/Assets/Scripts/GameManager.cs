@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private PlayerManager PlayerManager;
     private int playerAmount;
     [SerializeField] private List<Player> players;
+    [SerializeField]  private List<Player> storedPlayers;
 
     //[SerializeField] private bool debugMode;
 
@@ -30,6 +31,8 @@ public class GameManager : MonoBehaviour
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
         PlayerManager = GetComponent<PlayerManager>();
+
+        
     }
 
     public void SetGameData(List<Player> playerList) //Done in character creator
@@ -44,13 +47,39 @@ public class GameManager : MonoBehaviour
         {
             players[i].character = characterList[i];
         }
+        if (storedPlayers.Count == 0)
+        {
+            SetStored();
+        }
         return players;
+    }
+
+    private void SetStored()
+    {
+        foreach (Player p in players)
+        {
+            Debug.Log("Clone");
+            storedPlayers.Add(new Player(p.playerNumber, p.name, p.appearance, p.character));
+        }
     }
 
     public void StartGame(TurnManager turnManager)
     {
+        Debug.Log("Start Game was called");
         PlayerManager.TurnManager = turnManager;
         
+        PlayerManager.SpawnPlayers(players);
+    }
+
+    public void NewGame()
+    {
+        foreach (Player p in players)
+        {
+            Debug.Log("Destroying " + p.playerNumber);
+            Destroy(p.character);
+            players = new List<Player>();
+        }
+        players = storedPlayers;
         PlayerManager.SpawnPlayers(players);
     }
 

@@ -16,7 +16,7 @@ public class TurnManager : MonoBehaviour
     private Queue<Move> movesQueue = new Queue<Move>();
     public GameObject inputInfo, worldCanvas;
     private List<GameObject> infoObjectList = new List<GameObject>();
-    
+
 
 
 
@@ -35,31 +35,44 @@ public class TurnManager : MonoBehaviour
 
         }
 
+        StartNewGame();
+
+    }
+
+    public void StartNewGame()
+    {
+        
+
         for (int i = 0; i < playerAmount; i++)
         {
 
             playerInputs[i].GetInput();
             infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
-            
-        }
 
+        }
     }
 
     public void StartRound() // needs playerAmount?
     {
         moves = new List<Move>();
+        
         for (int i = 0; i < playerAmount; i++)
         {
             
-            playerInputs[i].GetInput();
+            
             if (infoObjectList.Count == 0)
             {
+                playerInputs[i].GetInput();
                 infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
             }
-            else
+            else if (playerManager.PlayerAlive(i + 1) && infoObjectList.Count > 0)
             {
+                playerInputs[i].GetInput();
+                infoObjectList[i].SetActive(true);
                 infoObjectList[i].transform.position = playerManager.GetPlayerPos(i);
+                infoObjectList[i].GetComponentInChildren<TextMeshProUGUI>().text = "0/3";
             }
+
         }
     }
 
@@ -82,6 +95,10 @@ public class TurnManager : MonoBehaviour
         
         if (moves.Count == (playerAmount * 3))
         {
+            foreach (GameObject game in infoObjectList)
+            {
+                game.SetActive(false);
+            }
             movesQueue = new Queue<Move>(moves);
             EnterCombat();
         }
@@ -103,13 +120,16 @@ public class TurnManager : MonoBehaviour
 
     private void MakeMove(Move move)// moves[index]
     {
-        if (move.moveType == 1)
+        if (playerManager.PlayerAlive(move.player))
         {
-            playerManager.MovePlayer(move.player, move.direction);
-        }
-        else if (move.moveType == 2)
-        {
-            playerManager.ShootPlayer(move.player, move.direction);
+            if (move.moveType == 1)
+            {
+                playerManager.MovePlayer(move.player, move.direction);
+            }
+            else if (move.moveType == 2)
+            {
+                playerManager.ShootPlayer(move.player, move.direction);
+            }
         }
     }
 

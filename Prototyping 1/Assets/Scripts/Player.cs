@@ -11,11 +11,12 @@ public class Player
     public GameObject appearance;
     public GameObject character; //Instantiated after object made
     
-    public Player (int playerNo, string charName, GameObject charObject) // Add more
+    public Player (int playerNo, string charName, GameObject appearObject, GameObject optChar = null) // Add more
     {
         playerNumber = playerNo;
         name = charName;
-        appearance = charObject;
+        appearance = appearObject;
+        character = optChar;
         alive = true;
         
     }

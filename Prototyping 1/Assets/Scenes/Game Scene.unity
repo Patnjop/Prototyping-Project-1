@@ -266,7 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bd85566edfc4d54c85685d621e600aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdDirectionTime: 2
+  holdDirectionTime: 1
   inputInfo: {fileID: 8176637225674645446, guid: 8897ab8c02eb0b3409e0b916e52c438e,
     type: 3}
   worldCanvas: {fileID: 1330768256}
@@ -419,6 +419,7 @@ MonoBehaviour:
   - {x: 6, y: -6}
   map: {fileID: 550637037}
   TurnManager: {fileID: 0}
+  aliveCount: 0
 --- !u!114 &1372682655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,10 +442,11 @@ MonoBehaviour:
       type: 3}
   - playerNumber: 2
     alive: 1
-    name: Grape
+    name: Muffin
     appearance: {fileID: 0}
     character: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
       type: 3}
+  storedPlayers: []
 --- !u!4 &1372682656
 Transform:
   m_ObjectHideFlags: 0
