@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player
 {
     public int playerNumber;
+    public bool alive;
     public string name;
     public GameObject appearance;
     public GameObject character; //Instantiated after object made
@@ -15,5 +16,7 @@ public class Player
         playerNumber = playerNo;
         name = charName;
         appearance = charObject;
+        alive = true;
+        
     }
 }

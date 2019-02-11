@@ -39,11 +39,11 @@ public class PlayerInput : MonoBehaviour
         }
         else if (Mathf.Round(Input.GetAxisRaw("Joystick " + playerNumber + " Vertical")) == -1)
         {
-            dir = 2;
+            dir = 3;
         }
         else if (Mathf.Round(Input.GetAxisRaw("Joystick " + playerNumber + " Horizontal")) == 1)
         {
-            dir = 3;
+            dir = 2;
         }
         else if (Mathf.Round(Input.GetAxisRaw("Joystick " + playerNumber + " Horizontal")) == -1)
         {
@@ -64,14 +64,16 @@ public class PlayerInput : MonoBehaviour
         if (awaitingInput == true)
         {
             Debug.Log("Awaiting input");
-            if (Input.GetAxisRaw("Joystick " + playerNumber + " Option") == -1)//Pressed B
+            if (Input.GetButtonDown("Joystick " + playerNumber + " Option 2"))//Pressed B
             {
+                Debug.Log("Cleared");
                 moveList = new List<Move>();
                 turnsMade = 0;
                 moveTypeSelected = 0;
                 direction = 0;
                 timer = 0;
                 seconds = 0;
+                turnManager.IncrementInfo(playerNumberInt, turnsMade);
             }
             Debug.Log(turnsMade + " :turns made");
             if (turnsMade < 3)
@@ -80,12 +82,12 @@ public class PlayerInput : MonoBehaviour
                 if (moveTypeSelected == 0)
                 {
                     Debug.Log("Awaiting move choice");
-                    if (Input.GetAxisRaw("Joystick " + playerNumber + " Type") == 1)//Pressed X
+                    if (Input.GetButtonDown("Joystick " + playerNumber + " Type 1"))//Pressed X
                     {
                         moveTypeSelected = 1;
                         Debug.Log("Pressed X");
                     }
-                    else if (Input.GetAxisRaw("Joystick " + playerNumber + " Type") == -1)//Pressed Y
+                    else if (Input.GetButtonDown("Joystick " + playerNumber + " Type 2"))//Pressed Y
                     {
                         moveTypeSelected = 2;
                         Debug.Log("Pressed Y");
@@ -102,22 +104,27 @@ public class PlayerInput : MonoBehaviour
                     {
                         timer += Time.deltaTime;
                         seconds = timer % 60;
-                        Debug.Log("Seconds: " + seconds);
+                        turnManager.FillCircle(playerNumberInt, seconds, secondsTillSelect);
+                        
 
                         if (seconds >= secondsTillSelect)
                         {
                             moveList.Add(new Move(playerNumberInt, turnsMade, moveTypeSelected, direction));
+                            turnsMade += 1;
                             Debug.Log("Move added, moves made: " + turnsMade + " move type: " + moveTypeSelected + " direction: " + direction);
                             moveTypeSelected = 0;
                             direction = 0;
                             timer = 0;
                             seconds = 0;
-                            turnsMade += 1;
+                            turnManager.FillCircle(playerNumberInt, 0, secondsTillSelect);
+                            turnManager.IncrementInfo(playerNumberInt, turnsMade);
+                            
                         }
                     }
                     else
                     {
                         Debug.Log("Direction failed");
+                        turnManager.FillCircle(playerNumberInt, 0, secondsTillSelect);
                         timer = 0;
                         seconds = 0;
 
@@ -126,10 +133,11 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
-                if (Input.GetAxisRaw("Joystick " + playerNumber + " Option") == 1)//Pressed A
+                Debug.Log("3 turns made, press A");
+                if (Input.GetButtonDown("Joystick " + playerNumber + " Option 1"))//Pressed A
                 {
-                    Debug.Log("3 turns made, press A");
-                    turnManager.AddPlayerMoves(moveList);
+                    Debug.Log("Ready!");
+                    turnManager.AddPlayerMoves(moveList, playerNumberInt);
                     moveList = new List<Move>();
                     awaitingInput = false;
                     turnsMade = 0;

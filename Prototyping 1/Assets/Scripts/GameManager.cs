@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager GM = null;              //Static instance of GameManager which allows it to be accessed by any other script.
-    [SerializeField] Vector2 gridSize;
+    public Vector2 gridSize;
     private PlayerManager PlayerManager;
     private int playerAmount;
     [SerializeField] private List<Player> players;
@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
     public void StartGame(TurnManager turnManager)
     {
         PlayerManager.TurnManager = turnManager;
+        
         PlayerManager.SpawnPlayers(players);
     }
 

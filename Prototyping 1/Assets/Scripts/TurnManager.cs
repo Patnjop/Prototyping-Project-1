@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+using System.Linq;
 
 public class TurnManager : MonoBehaviour
 {
@@ -10,6 +13,11 @@ public class TurnManager : MonoBehaviour
     private List<PlayerInput> playerInputs = new List<PlayerInput>();
     [SerializeField] private int holdDirectionTime = 2;
     private List<Move> moves = new List<Move>();
+    private Queue<Move> movesQueue = new Queue<Move>();
+    public GameObject inputInfo, worldCanvas;
+    private List<GameObject> infoObjectList = new List<GameObject>();
+    
+
 
 
     private void Start()
@@ -24,64 +32,84 @@ public class TurnManager : MonoBehaviour
             playerInputs[i].turnManager = this;
             playerInputs[i].playerNumberInt = (i + 1);
             playerInputs[i].secondsTillSelect = holdDirectionTime;
-            playerInputs[i].GetInput();
-        }
-    }
 
-    public void StartRound() // FIGURE OUT, placed above
-    {
-        Debug.Log("Start Round");
-        for (int i = 0; i < playerInputs.Count; i++)//foreach (PlayerInput p in playerInputs)
+        }
+
+        for (int i = 0; i < playerAmount; i++)
         {
+
+            playerInputs[i].GetInput();
+            infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
             
         }
+
     }
 
-    public void AddPlayerMoves(List<Move> moveList)
+    public void StartRound() // needs playerAmount?
     {
+        moves = new List<Move>();
+        for (int i = 0; i < playerAmount; i++)
+        {
+            
+            playerInputs[i].GetInput();
+            if (infoObjectList.Count == 0)
+            {
+                infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
+            }
+            else
+            {
+                infoObjectList[i].transform.position = playerManager.GetPlayerPos(i);
+            }
+        }
+    }
+
+    public void FillCircle(int playerNum, float amount, float max)
+    {
+        infoObjectList[playerNum-1].GetComponentInChildren<Image>().fillAmount = (amount / max);
+    }
+
+    public void IncrementInfo(int playerNum, int amount)
+    {
+        infoObjectList[playerNum-1].GetComponentInChildren<TextMeshProUGUI>().text = amount + "/3";
+    }
+
+    public void AddPlayerMoves(List<Move> moveList, int playerNum)
+    {
+        infoObjectList[playerNum - 1].GetComponentInChildren<TextMeshProUGUI>().text = "Ready!";
+        Debug.Log("Pre-sort, Moves count: " + moves.Count);
         moves.AddRange(moveList);
+        moves = moves.OrderBy(o => o.moveNumber).ThenBy(c => c.moveType).ToList();
+        
         if (moves.Count == (playerAmount * 3))
         {
+            movesQueue = new Queue<Move>(moves);
             EnterCombat();
         }
     }
 
-    private void EnterCombat()
+    public void EnterCombat()
     {
-        
-        for (int moveNo = 1; moveNo < 5; moveNo++) //Go through all the moves made first, then second etc    
+        if (movesQueue.Count > 0)
         {
-            for (int moveType = 1; moveType < 2; moveType++) //Go through moves before shoots   
-            {
-                for (int i = 0; i < moves.Count; i++) // Go through list of moves
-                {
-                    if (moves[i].moveNumber == moveNo)
-                    {
-                        if (moves[i].moveType == moveNo && moveType == 1) // Will go through first made moves, then moves not shoots
-                        {
-                            MakeMove(i);
-                        }
-                        else if (moves[i].moveType == moveNo && moveType == 2)
-                        {
-                            MakeMove(i);
-                        }
-                    }
-                }
-
-            }
-            // Next round!
+            MakeMove(movesQueue.Dequeue());
         }
+        else
+        {
+            StartRound();
+        }
+        
+  
     }
 
-    private void MakeMove(int index)// moves[index]
+    private void MakeMove(Move move)// moves[index]
     {
-        if (moves[index].moveType == 1)
+        if (move.moveType == 1)
         {
-            playerManager.MovePlayer(index, 1);
+            playerManager.MovePlayer(move.player, move.direction);
         }
-        else if (moves[index].moveType == 2)
+        else if (move.moveType == 2)
         {
-            //playerManager
+            playerManager.ShootPlayer(move.player, move.direction);
         }
     }
 
