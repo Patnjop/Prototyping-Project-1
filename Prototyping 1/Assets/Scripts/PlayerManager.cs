@@ -8,8 +8,10 @@ public class PlayerManager : MonoBehaviour
     private List<Player> players = new List<Player>();
     [SerializeField] private GameObject map;
     public TurnManager TurnManager;
-    private List<GameObject> bullets = new List<GameObject>(); // maybe make class??
-    [SerializeField]  private int aliveCount;
+    private List<Bullet> bullets = new List<Bullet>();
+    private List<GameObject> ammo = new List<GameObject>();
+    [SerializeField] private int aliveCount;
+    [SerializeField] private GameObject bulletGO;
 
     public void SpawnPlayers(List<Player> playerList)
     {
@@ -22,7 +24,7 @@ public class PlayerManager : MonoBehaviour
         }
         players = GameManager.GM.AddInstantiatedCharacters(activePlayers);
         aliveCount = players.Count;
-        TurnManager.StartRound();
+        TurnManager.StartNewGame();
     }
 
     private bool GridSpaceTaken(Transform check)
@@ -39,9 +41,10 @@ public class PlayerManager : MonoBehaviour
 
     private bool AmmoInSpace(Transform check) // TURN INTO AMMO
     {
-        for (int i = 0; i < bullets.Count; i++) //Add objects
+        
+        for (int i = 0; i < ammo.Count; i++) //Add objects
         {
-            if (check.position == bullets[i].transform.position)
+            if (check.position == ammo[i].transform.position)
             {
                 return true;
             }
@@ -177,24 +180,53 @@ public class PlayerManager : MonoBehaviour
 
 
         }
+        UpdateBullets();
         Invoke("NextStep", 0.5f);
     }
 
     private void NextStep()
     {
-        
+
         if (aliveCount > 1)
         {
-            
+
             TurnManager.EnterCombat();
         }
         else // FIX
         {
             Debug.Log("New Game!");
-            
+
             GameManager.GM.NewGame();
         }
     }
+
+    public void CheckCombatChapter()
+    {
+        
+        if (bullets.Count > 0)
+        {
+            UpdateBullets();
+            Invoke("NextStep", 0.5f);
+        }
+        else
+        {
+            Debug.Log("Checking Chapter");
+            foreach(Bullet b in bullets)
+            {
+                Destroy(b.body);
+                bullets.Remove(b);
+            }
+            StartCoroutine("ChapterDoneDelay", 0.5f);
+        }
+    }
+
+    IEnumerator ChapterDoneDelay(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        TurnManager.EnterCombat(true);
+    }
+
+
 
     private void KillPlayer(int playerNum)
     {
@@ -209,77 +241,110 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void CheckBulletPath(int dir, Transform check) //the direction, position
+    private void UpdateBullets() //the direction, position
+    {
+        Bullet toRemove = new Bullet(0,0);
+        bool removeBullet = false;
+        foreach (Bullet b in bullets)
+        {
+            if (b.direction == 1)
+            {
+                b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y + 1);
+                for (int p = 0; p < players.Count; p++)
+                {
+                    if ((b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
+                    {
+                        KillPlayer(players[p].playerNumber);
+                        toRemove = b;
+                        removeBullet = true;
+                    }
+                }
+            }
+            else if (b.direction == 2)
+            {
+                b.body.transform.position = new Vector2(b.body.transform.position.x + 1, b.body.transform.position.y);
+                for (int p = 0; p < players.Count; p++)
+                {
+                    if ((b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
+                    {
+                        KillPlayer(players[p].playerNumber);
+                        toRemove = b;
+                        removeBullet = true;
+                    }
+                }
+            }
+            else if (b.direction == 3)
+            {
+                b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y - 1);
+                for (int p = 0; p < players.Count; p++)
+                {
+                    if ((b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
+                    {
+                        KillPlayer(players[p].playerNumber);
+                        toRemove = b;
+                        removeBullet = true;
+                    }
+                }
+            }
+            else if (b.direction == 4)
+            {
+                b.body.transform.position = new Vector2(b.body.transform.position.x - 1, b.body.transform.position.y);
+                for (int p = 0; p < players.Count; p++)
+                {
+
+                    if ((b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
+                    {
+                        KillPlayer(players[p].playerNumber);
+                        toRemove = b;
+                        removeBullet = true;
+                    }
+
+                }
+            }
+            b.movesLeft -= 1;
+            if (b.movesLeft == 0)
+            {
+                toRemove = b;
+                removeBullet = true;
+            }
+        }
+
+        if (removeBullet)
+        {
+            Destroy(toRemove.body);
+            bullets.Remove(toRemove);
+        }
+    }
+
+    private void MakeBullet(int dir, Transform check)
     {
         float posX = check.position.x;
         float posY = check.position.y;
+        Vector2 spawnPos = new Vector2();
         int length = 0;
         if (dir == 1)
         {
             length = (int)(0 - posY);
+            spawnPos = new Vector2(posX, posY+1);
         }
         else if (dir == 2)
         {
             length = (int)(GameManager.GM.gridSize.x - posX);
+            spawnPos = new Vector2(posX + 1, posY);
         }
         else if (dir == 3)
         {
             length = (int)((GameManager.GM.gridSize.y * -1) + posY);
+            spawnPos = new Vector2(posX, posY - 1);
         }
         else if (dir == 4)
         {
             length = (int)(0 + posX);
+            spawnPos = new Vector2(posX - 1, posY);
         }
-        Debug.Log("Length = " + length);
-        for (int i = 1; i < length+1; i++)
-        {
-            if (dir == 1)
-            {
-                for (int p = 0; p < players.Count; p++)
-                {
-                    if ((posY + i) == players[p].character.transform.position.y && posX == players[p].character.transform.position.x)
-                    {
-                        KillPlayer(players[p].playerNumber);
-                    }
-                }
-            }
-            else if (dir == 2)
-            {
-                for (int p = 0; p < players.Count; p++)
-                {
-                    if ((posX + i) == players[p].character.transform.position.x && posY == players[p].character.transform.position.y)
-                    {
-                        KillPlayer(players[p].playerNumber);
-                    }
-                }
-            }
-            else if (dir == 3)
-            {
-                for (int p = 0; p < players.Count; p++)
-                {
-                    if ((posY - i) == players[p].character.transform.position.x && posY == players[p].character.transform.position.y)
-                    {
-                        KillPlayer(players[p].playerNumber);
-                    }
-                }
-            }
-            else if (dir == 4)
-            {
-                for (int p = 0; p < players.Count; p++)
-                {
-
-                    if ((posX - i) == players[p].character.transform.position.x && posY == players[p].character.transform.position.y)
-                    {
-                        KillPlayer(players[p].playerNumber);
-                        Debug.Log("Success");
-                    }
-                    else
-                    {
-                        Debug.Log("Fail");
-                    }
-                }
-            }
-        }
+        UpdateBullets();
+        bullets.Add(new Bullet(dir, length));
+        bullets[bullets.Count - 1].body = Instantiate(bulletGO, spawnPos, Quaternion.identity);
     }
 
     public void ShootPlayer(int p, int dir)
@@ -288,7 +353,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (players[i].playerNumber == p)
             {
-                CheckBulletPath(dir, players[i].character.transform);
+                MakeBullet(dir, players[i].character.transform);
             }
         }
 
@@ -314,6 +379,11 @@ public class PlayerManager : MonoBehaviour
             
         }
         return false;
+    }
+
+    public int PlayerAmount()
+    {
+        return aliveCount;
     }
 
 

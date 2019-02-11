@@ -16,6 +16,7 @@ public class TurnManager : MonoBehaviour
     private Queue<Move> movesQueue = new Queue<Move>();
     public GameObject inputInfo, worldCanvas;
     private List<GameObject> infoObjectList = new List<GameObject>();
+    public int movesPerTurn;
 
 
 
@@ -55,7 +56,7 @@ public class TurnManager : MonoBehaviour
     public void StartRound() // needs playerAmount?
     {
         moves = new List<Move>();
-        
+        playerAmount = playerManager.PlayerAmount();
         for (int i = 0; i < playerAmount; i++)
         {
             
@@ -89,11 +90,10 @@ public class TurnManager : MonoBehaviour
     public void AddPlayerMoves(List<Move> moveList, int playerNum)
     {
         infoObjectList[playerNum - 1].GetComponentInChildren<TextMeshProUGUI>().text = "Ready!";
-        Debug.Log("Pre-sort, Moves count: " + moves.Count);
         moves.AddRange(moveList);
-        moves = moves.OrderBy(o => o.moveNumber).ThenBy(c => c.moveType).ToList();
+        moves = moves.OrderBy(o => o.moveNumber).ToList();
         
-        if (moves.Count == (playerAmount * 3))
+        if (moves.Count == (playerAmount * movesPerTurn))
         {
             foreach (GameObject game in infoObjectList)
             {
@@ -104,9 +104,16 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    public void EnterCombat()
+    public void EnterCombat(bool bulletsCleared = false)
     {
-        if (movesQueue.Count > 0)
+        Debug.Log("Bullets cleared = " + bulletsCleared);
+        if((movesQueue.Count == (playerAmount * movesPerTurn) - playerAmount 
+            || movesQueue.Count == (playerAmount * movesPerTurn) - playerAmount * 2 
+            || movesQueue.Count == (playerAmount * movesPerTurn) - playerAmount * 3) && bulletsCleared == false)
+        {
+            playerManager.CheckCombatChapter();
+        }
+        else if (movesQueue.Count > 0)
         {
             MakeMove(movesQueue.Dequeue());
         }

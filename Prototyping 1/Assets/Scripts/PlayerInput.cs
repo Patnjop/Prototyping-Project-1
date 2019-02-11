@@ -76,7 +76,7 @@ public class PlayerInput : MonoBehaviour
                 turnManager.IncrementInfo(playerNumberInt, turnsMade);
             }
 
-            if (turnsMade < 3)
+            if (turnsMade < turnManager.movesPerTurn)
             {
 
                 if (moveTypeSelected == 0)
