@@ -8,6 +8,7 @@ public class GameManage : MonoBehaviour
     public Rotater1 rotater1;
     GameManage gameManage;
     public Text text;
+    public static string selectedAbility;
     List<string> abilities = new List<string>();
     int count = 0;
 
@@ -25,31 +26,42 @@ public class GameManage : MonoBehaviour
     void Update()
     {
         text.text = abilities[count];
-        if (Input.GetKeyDown("joystick button 1") && Rotater1.selected == true)
+        /*if (Input.GetKeyDown("joystick button 1") && Rotater1.selected == true)
         {
-            gameManage.enabled = false;
+            Rotater1.selected = false;
             rotater1.enabled = true;
-        }
-        if (Input.GetKeyDown("joystick button 5") && Rotater1.selected == true)
+        }*/
+        if (Counter.rotaterCount == 2)
         {
-            if (count < 3)
+            if (Input.GetKeyDown("joystick button 5"))
             {
-                count++;
+                if (count < 3)
+                {
+                    count++;
+                }
+                else
+                {
+                    count = 0;
+                }
             }
-            else
+            if (Input.GetKeyDown("joystick button 4"))
             {
-                count = 0;
+                if (count > 0)
+                {
+                    count--;
+                }
+                else
+                {
+                    count = 3;
+                }
             }
         }
-        if (Input.GetKeyDown("joystick button 4") && Rotater1.selected == true)
+        if (Counter.rotaterCount == 3)
         {
-            if (count > 0)
+            if (Input.GetKeyDown("joystick button 0"))
             {
-                count--;
-            }
-            else
-            {
-                count = 3;
+                selectedAbility = abilities[count];
+                Debug.Log(selectedAbility);
             }
         }
     }

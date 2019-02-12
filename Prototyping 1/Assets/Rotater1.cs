@@ -27,7 +27,7 @@ public class Rotater1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("joystick button 0") && active == true)
+        /*if (Input.GetKeyDown("joystick button 0") && active == true)
         {
             rotater1.enabled = false;
             selected = true;
@@ -40,8 +40,8 @@ public class Rotater1 : MonoBehaviour
         if (Input.GetKeyDown("joystick button 0") && active == false)
         {
             active = true;
-        }
-        if(active == true)
+        }*/
+        if(Counter.rotaterCount == 1)
         { 
             parts[activeCount].SetActive(true);
             if (Input.GetKeyDown("joystick button 5"))

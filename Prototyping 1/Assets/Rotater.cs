@@ -26,36 +26,34 @@ public class Rotater : MonoBehaviour
     void Update()
     {
         parts[activeCount].SetActive(true);
-        if (Input.GetKeyDown("joystick button 5"))
+        if (Counter.rotaterCount == 0)
         {
-            previousCount = activeCount;
-            if (activeCount > 1)
+            if (Input.GetKeyDown("joystick button 5"))
             {
-                activeCount = 0;
+                previousCount = activeCount;
+                if (activeCount > 1)
+                {
+                    activeCount = 0;
+                }
+                else
+                {
+                    activeCount++;
+                }
+                parts[previousCount].SetActive(false);
             }
-            else
+            if (Input.GetKeyDown("joystick button 4"))
             {
-                activeCount++;
+                previousCount = activeCount;
+                if (activeCount < 1)
+                {
+                    activeCount = 2;
+                }
+                else
+                {
+                    activeCount--;
+                }
+                parts[previousCount].SetActive(false);
             }
-            parts[previousCount].SetActive(false);
-        }
-        if (Input.GetKeyDown("joystick button 4"))
-        {
-            previousCount = activeCount;
-            if (activeCount < 1)
-            {
-                activeCount = 2;
-            }
-            else
-            {
-                activeCount--;
-            }
-            parts[previousCount].SetActive(false);
-        }
-        if (Input.GetKeyDown("joystick button 0"))
-        {
-            rotater.enabled = false;
-            rotater1.enabled = true;
-        }
+        }      
     }
 }
