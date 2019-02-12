@@ -15,15 +15,35 @@ public class PlayerManager : MonoBehaviour
 
     public void SpawnPlayers(List<Player> playerList)
     {
-        List<GameObject> activePlayers = new List<GameObject>();
-        Debug.Log("Spawning Players");
-        foreach (Player p in playerList)
+        if (GameManager.GM.firstGame)
         {
-            GameObject Player = Instantiate(p.character, spawnLocation[p.playerNumber - 1], Quaternion.identity);
-            activePlayers.Add(Player);
+            Debug.Log("CALLED");
+            List<GameObject> activePlayers = new List<GameObject>();
+            Debug.Log("Spawning Players");
+            foreach (Player p in playerList)
+            {
+
+                GameObject Player = Instantiate(p.character, spawnLocation[p.playerNumber - 1], Quaternion.identity);
+                Player.SetActive(true);
+                activePlayers.Add(Player);
+
+
+
+            }
+            players = GameManager.GM.AddInstantiatedCharacters(activePlayers);
+            aliveCount = players.Count;
         }
-        players = GameManager.GM.AddInstantiatedCharacters(activePlayers);
-        aliveCount = players.Count;
+        else
+        {
+            aliveCount = GameManager.GM.PlayerAmount();
+            players = GameManager.GM.GetPlayers();
+        }
+        foreach (Bullet b in bullets)
+        {
+            Destroy(b.body);
+
+        }
+
         TurnManager.StartNewGame();
     }
 
@@ -33,6 +53,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (check.position == players[i].character.transform.position && players[i].alive)
             {
+                KillPlayer(players[i].playerNumber);
                 return true;
             }
         }
@@ -41,7 +62,7 @@ public class PlayerManager : MonoBehaviour
 
     private bool AmmoInSpace(Transform check) // TURN INTO AMMO
     {
-        
+
         for (int i = 0; i < ammo.Count; i++) //Add objects
         {
             if (check.position == ammo[i].transform.position)
@@ -52,7 +73,7 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
 
-    public void MovePlayer(int p, int dir) // p = player number
+    public void MovePlayer(int p, int dir, bool dontUpdate = false) // p = player number
     {
         Debug.Log("Moving player: " + p + " in direction " + dir);
         Debug.Log("Player " + 1 + " x,y: " + players[0].character.transform.position.x + "," + players[0].character.transform.position.y);
@@ -68,22 +89,18 @@ public class PlayerManager : MonoBehaviour
                         direction.position = new Vector2(direction.position.x, direction.position.y + 1);
                         bool spaceTaken;
                         spaceTaken = GridSpaceTaken(direction);
-                        if (!spaceTaken)
-                        {
-                            players[i].character.transform.position = new Vector2(players[i].character.transform.position.x,
-                            players[i].character.transform.position.y + 1);
 
-                            spaceTaken = AmmoInSpace(direction);
-                            if (spaceTaken)
-                            {
-                                //AMMO UP
-                            }
-                        }
-                        else
+                        players[i].character.transform.position = new Vector2(players[i].character.transform.position.x,
+                        players[i].character.transform.position.y + 1);
+
+
+                        spaceTaken = AmmoInSpace(direction);
+                        if (spaceTaken)
                         {
-                            Debug.Log("Player 1 blocked by item or dead");
-                            //BLOCKED
+                            //AMMO UP
                         }
+
+
                     }
                     else
                     {
@@ -180,7 +197,10 @@ public class PlayerManager : MonoBehaviour
 
 
         }
-        UpdateBullets();
+        if (!dontUpdate)
+        {
+            UpdateBullets();
+        }
         Invoke("NextStep", 0.5f);
     }
 
@@ -195,28 +215,38 @@ public class PlayerManager : MonoBehaviour
         else // FIX
         {
             Debug.Log("New Game!");
-
+            foreach (Player p in players)
+            {
+                if (p.alive)
+                {
+                    p.points += 4;
+                }
+            }
             GameManager.GM.NewGame();
         }
     }
 
     public void CheckCombatChapter()
     {
-        
-        if (bullets.Count > 0)
+        if (aliveCount > 1)
         {
-            UpdateBullets();
-            Invoke("NextStep", 0.5f);
-        }
-        else
-        {
-            Debug.Log("Checking Chapter");
-            foreach(Bullet b in bullets)
+
+
+            if (bullets.Count > 0)
             {
-                Destroy(b.body);
-                bullets.Remove(b);
+                UpdateBullets();
+                Invoke("NextStep", 0.5f);
             }
-            StartCoroutine("ChapterDoneDelay", 0.5f);
+            else
+            {
+                Debug.Log("Checking Chapter");
+                foreach (Bullet b in bullets)
+                {
+                    Destroy(b.body);
+                    bullets.Remove(b);
+                }
+                StartCoroutine("ChapterDoneDelay", 0.5f);
+            }
         }
     }
 
@@ -236,20 +266,41 @@ public class PlayerManager : MonoBehaviour
             {
                 players[i].alive = false;
                 players[i].character.SetActive(false);
+
                 aliveCount -= 1;
+                if (aliveCount == 2)
+                {
+                    players[i].points += 1;
+                }
+                else if (aliveCount == 1)
+                {
+                    players[i].points += 2;
+                }
+
+
+
             }
         }
     }
 
     private void UpdateBullets() //the direction, position
     {
-        Bullet toRemove = new Bullet(0,0);
+
+
+        Bullet toRemove = new Bullet(0, 0);
         bool removeBullet = false;
         foreach (Bullet b in bullets)
         {
             if (b.direction == 1)
             {
-                b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y + 1);
+                if (b.type != 2)
+                {
+                    b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y + 1);
+                }
+                else
+                {
+                    b.body.transform.position = new Vector2(b.body.transform.position.x, GameManager.GM.gridSize.y);
+                }
                 for (int p = 0; p < players.Count; p++)
                 {
                     if ((b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
@@ -262,7 +313,14 @@ public class PlayerManager : MonoBehaviour
             }
             else if (b.direction == 2)
             {
-                b.body.transform.position = new Vector2(b.body.transform.position.x + 1, b.body.transform.position.y);
+                if (b.type != 2)
+                {
+                    b.body.transform.position = new Vector2(b.body.transform.position.x + 1, b.body.transform.position.y);
+                }
+                else
+                {
+                    b.body.transform.position = new Vector2(0, b.body.transform.position.y);
+                }
                 for (int p = 0; p < players.Count; p++)
                 {
                     if ((b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
@@ -275,7 +333,14 @@ public class PlayerManager : MonoBehaviour
             }
             else if (b.direction == 3)
             {
-                b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y - 1);
+                if (b.type != 2)
+                {
+                    b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y - 1);
+                }
+                else
+                {
+                    b.body.transform.position = new Vector2(b.body.transform.position.x, 0);
+                }
                 for (int p = 0; p < players.Count; p++)
                 {
                     if ((b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
@@ -288,7 +353,14 @@ public class PlayerManager : MonoBehaviour
             }
             else if (b.direction == 4)
             {
-                b.body.transform.position = new Vector2(b.body.transform.position.x - 1, b.body.transform.position.y);
+                if (b.type != 2)
+                {
+                    b.body.transform.position = new Vector2(b.body.transform.position.x - 1, b.body.transform.position.y);
+                }
+                else
+                {
+                    b.body.transform.position = new Vector2(GameManager.GM.gridSize.x, b.body.transform.position.y);
+                }
                 for (int p = 0; p < players.Count; p++)
                 {
 
@@ -316,7 +388,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void MakeBullet(int dir, Transform check)
+    private void MakeBullet(int dir, Transform check, int playerNum = 0)
     {
         float posX = check.position.x;
         float posY = check.position.y;
@@ -325,7 +397,7 @@ public class PlayerManager : MonoBehaviour
         if (dir == 1)
         {
             length = (int)(0 - posY);
-            spawnPos = new Vector2(posX, posY+1);
+            spawnPos = new Vector2(posX, posY + 1);
         }
         else if (dir == 2)
         {
@@ -342,9 +414,38 @@ public class PlayerManager : MonoBehaviour
             length = (int)(0 + posX);
             spawnPos = new Vector2(posX - 1, posY);
         }
+
+        if (length > players[playerNum-1].range && players[playerNum].playerClass != 2)
+        {
+            length = players[playerNum].range;
+        }
+        else if (players[playerNum-1].playerClass == 2)
+        {
+            length = players[playerNum].range;
+        }
+
         UpdateBullets();
-        bullets.Add(new Bullet(dir, length));
+        if (playerNum > 0)
+        {
+            if (players[playerNum-1].special)
+            {
+                bullets.Add(new Bullet(dir, length, players[playerNum].playerClass));
+            }
+            else
+            {
+                bullets.Add(new Bullet(dir, length));
+            }
+        }
+        else
+        {
+            bullets.Add(new Bullet(dir, length));
+        }
+
         bullets[bullets.Count - 1].body = Instantiate(bulletGO, spawnPos, Quaternion.identity);
+        if (bullets[bullets.Count - 1].type == 3)
+        {
+            MovePlayer(playerNum, dir, true);
+        }
     }
 
     public void ShootPlayer(int p, int dir)
@@ -353,7 +454,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (players[i].playerNumber == p)
             {
-                MakeBullet(dir, players[i].character.transform);
+                MakeBullet(dir, players[i].character.transform, p);
             }
         }
 
@@ -367,7 +468,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool PlayerAlive(int p)
     {
-        
+
         for (int i = 0; i < players.Count; i++)
         {
 
@@ -376,7 +477,7 @@ public class PlayerManager : MonoBehaviour
 
                 return true;
             }
-            
+
         }
         return false;
     }
@@ -386,5 +487,24 @@ public class PlayerManager : MonoBehaviour
         return aliveCount;
     }
 
+    private int GetRecoilDir(int dir)
+    {
+        if (dir == 1)
+        {
+            return 3;
+        }
+        else if (dir == 2)
+        {
+            return 4;
+        }
+        else if (dir == 3)
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
+    }
 
 }

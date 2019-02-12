@@ -1,15 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager GM = null;              //Static instance of GameManager which allows it to be accessed by any other script.
     public Vector2 gridSize;
     private PlayerManager PlayerManager;
+    public PlayerManager storedPlayerManager;
     private int playerAmount;
     [SerializeField] private List<Player> players;
-    [SerializeField]  private List<Player> storedPlayers;
+    [SerializeField] private List<Player> storedPlayers;
+    public bool firstGame = true;
+    public UIManager UIManager;
+    public int[] playerScores;
+    
 
     //[SerializeField] private bool debugMode;
 
@@ -30,7 +36,7 @@ public class GameManager : MonoBehaviour
         }
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
-        PlayerManager = GetComponent<PlayerManager>();
+        PlayerManager = GetComponentInChildren<PlayerManager>();
 
         
     }
@@ -39,6 +45,7 @@ public class GameManager : MonoBehaviour
     {
         players = playerList;
         playerAmount = players.Count;
+        playerScores = new int[playerAmount];
     }
 
     public List<Player> AddInstantiatedCharacters(List<GameObject> characterList)
@@ -54,33 +61,65 @@ public class GameManager : MonoBehaviour
         return players;
     }
 
+    public List<Player> GetPlayers()
+    {
+        return players;
+    }
+
     private void SetStored()
     {
         foreach (Player p in players)
         {
             Debug.Log("Clone");
-            storedPlayers.Add(new Player(p.playerNumber, p.name, p.appearance, p.character));
+            storedPlayers.Add(new Player(p.playerNumber, p.name, p.appearance, p.playerClass, p.range, p.character));
         }
+        
     }
 
     public void StartGame(TurnManager turnManager)
     {
         Debug.Log("Start Game was called");
+        if (gameObject.transform.childCount == 0)
+        {
+            Instantiate(storedPlayerManager, gameObject.transform);
+            PlayerManager = GetComponentInChildren<PlayerManager>();
+        }
+
         PlayerManager.TurnManager = turnManager;
-        
+
         PlayerManager.SpawnPlayers(players);
+        foreach (Player p in players)
+        {
+            p.character.SetActive(true);
+        }
+        UIManager.SetScores(playerScores);
     }
 
     public void NewGame()
     {
+        bool gameOver = false;
+        int winnerNum = 0;
         foreach (Player p in players)
         {
-            Debug.Log("Destroying " + p.playerNumber);
-            Destroy(p.character);
-            players = new List<Player>();
+            playerScores[p.playerNumber - 1] += p.points;
+            if (p.points == 20)
+            {
+                gameOver = true;
+                winnerNum = p.playerNumber;
+            }
         }
-        players = storedPlayers;
-        PlayerManager.SpawnPlayers(players);
+        if (!gameOver)
+        {
+            firstGame = false;
+            players = storedPlayers;
+            Destroy(gameObject.transform.GetChild(0).gameObject);
+            Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
+            UIManager.SetScores(playerScores);
+        }
+        else
+        {
+            UIManager.SetWinner(winnerNum);
+        }
     }
 
     public int PlayerAmount()
