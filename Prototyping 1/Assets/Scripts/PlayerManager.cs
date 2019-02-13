@@ -13,6 +13,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject bulletGO;
     public GameObject bulletManager;
     public List<Transform> ammoPiles;
+    public int ammoToGain;
 
     public void SpawnPlayers(List<Player> playerList)
     {
@@ -61,29 +62,26 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
 
-    private bool AmmoInSpace(Transform check) // TURN INTO AMMO
+    private void AmmoInSpace(Transform check, int playerNum) // TURN INTO AMMO
     {
-
+        int toDestroy = -1;
         for (int i = 0; i < ammoPiles.Count; i++) //Add objects
         {
             if (check.position == ammoPiles[i].position)
             {
-               
-                return true;
+                players[playerNum].ammo += ammoToGain;
+                Destroy(ammoPiles[i].gameObject);
+                toDestroy = i;
             }
         }
-        return false;
+        if (toDestroy != -1)
+        {
+            ammoPiles.Remove(ammoPiles[toDestroy]);
+        }
+        
     }
 
-    private void RemoveAmmo(Transform ammo)
-    {
-        foreach (Transform a in ammoPiles)
-        {
-            if (ammo.position.x == a.position.x && ammo.position.y == a.position.y)
-            Destroy(a.gameObject);
-            ammoPiles.Remove(a);
-        }
-    }
+    
 
     private bool HitBullet(Transform check)
     {
@@ -118,12 +116,8 @@ public class PlayerManager : MonoBehaviour
                         {
                             KillPlayer(players[i].playerNumber);
                         }
-                        spaceTaken = AmmoInSpace(direction);
-                        if (spaceTaken)
-                        {
-                            players[i].ammo += 1;
-                            RemoveAmmo(players[i].character.transform);
-                        }
+                        AmmoInSpace(direction, i);
+
 
 
                     }
@@ -144,19 +138,9 @@ public class PlayerManager : MonoBehaviour
                             KillPlayer(players[i].playerNumber);
                         }
                         spaceTaken = GridSpaceTaken(direction, p);
-                        if (!spaceTaken)
-                        {
-
-                            spaceTaken = AmmoInSpace(direction);
-                            if (spaceTaken)
-                            {
-                                players[i].ammo += 1;
-                            }
-                        }
-                        else
-                        {
-                            //BLOCKED
-                        }
+                        AmmoInSpace(direction, i);
+                        
+                        
                     }
                     else
                     {
@@ -175,20 +159,7 @@ public class PlayerManager : MonoBehaviour
                             KillPlayer(players[i].playerNumber);
                         }
                         spaceTaken = GridSpaceTaken(direction, p);
-                        if (!spaceTaken)
-                        {
-
-
-                            spaceTaken = AmmoInSpace(direction);
-                            if (spaceTaken)
-                            {
-                                players[i].ammo += 1;
-                            }
-                        }
-                        else
-                        {
-                            //BLOCKED
-                        }
+                        AmmoInSpace(direction, i);
                     }
                     else
                     {
@@ -206,19 +177,7 @@ public class PlayerManager : MonoBehaviour
                             KillPlayer(players[i].playerNumber);
                         }
                         spaceTaken = GridSpaceTaken(direction, p);
-                        if (!spaceTaken)
-                        {
-
-                            spaceTaken = AmmoInSpace(direction);
-                            if (spaceTaken)
-                            {
-                                players[i].ammo += 1;
-                            }
-                        }
-                        else
-                        {
-                            //BLOCKED
-                        }
+                        AmmoInSpace(direction, i);
                     }
                     else
                     {
@@ -504,8 +463,9 @@ public class PlayerManager : MonoBehaviour
         {
             if (length > players[playerNum - 1].range)
             {
+                
                 length = players[playerNum - 1].range;
-
+                Debug.Log("NICK SHOT " + length);
             }
             if (players[playerNum - 1].playerClass == 3 && players[playerNum - 1].special)
             {
@@ -515,6 +475,10 @@ public class PlayerManager : MonoBehaviour
             if (players[playerNum - 1].playerClass == 2 && players[playerNum - 1].special)
             {
                 length = players[playerNum - 1].range;
+            }
+            if (players[playerNum - 1].playerClass == 1 && players[playerNum - 1].special)
+            {
+                length -= 1;
             }
         }
         else if (length > range)
@@ -529,6 +493,7 @@ public class PlayerManager : MonoBehaviour
         {
             UpdateBullets();
         }
+        Debug.Log("NICK SHOT AGAIN " + length);
         if (playerNum > 0)
         {
 
@@ -610,11 +575,11 @@ public class PlayerManager : MonoBehaviour
     {
         if (active)
         {
-            players[num].special = true;
+            players[num - 1].special = true;
         }
         else
         {
-            players[num].special = false;
+            players[num - 1].special = false;
         }
     }
 
@@ -640,21 +605,21 @@ public class PlayerManager : MonoBehaviour
 
     public int GetAmmo(int p)
     {
-        return players[p].ammo;
+        return players[p - 1].ammo;
     }
 
     public void UseAmmo(int ammoCost, int p)
     {
-        players[p].ammo -= ammoCost;
+        players[p - 1].ammo -= ammoCost;
     }
 
     public int GetClass(int p)
     {
-        return players[p].playerClass;
+        return players[p - 1].playerClass;
     }
     public void SetSpecial(int p)
     {
-        players[p].special = true;
+        players[p - 1].special = true;
     }
 
     private int GetTShotDir(int dir, int side)

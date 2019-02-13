@@ -29,7 +29,7 @@ public class PlayerInput : MonoBehaviour
         awaitingInput = true;
         moveList = new List<Move>();
         playerNumber = playerNumberInt.ToString();
-        turnManager.playerManager.PlayerSpecial(false, playerNumberInt-1);
+        //turnManager.playerManager.PlayerSpecial(false, playerNumberInt-1);
     }
 
     private int GetAnalogDirection()
