@@ -54,3 +54,4 @@ MonoBehaviour:
   aliveCount: 0
   bulletGO: {fileID: 4892351701214011732, guid: 077174051c1552d4db9ca8cdcdcce32e,
     type: 3}
+  bulletManager: {fileID: 0}

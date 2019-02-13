@@ -8,10 +8,11 @@ public class PlayerManager : MonoBehaviour
     private List<Player> players = new List<Player>();
     [SerializeField] private GameObject map;
     public TurnManager TurnManager;
-    private List<Bullet> bullets = new List<Bullet>();
-    private List<GameObject> ammo = new List<GameObject>();
+    public List<Bullet> bullets = new List<Bullet>();
     [SerializeField] private int aliveCount;
     [SerializeField] private GameObject bulletGO;
+    public GameObject bulletManager;
+    public List<Transform> ammoPiles;
 
     public void SpawnPlayers(List<Player> playerList)
     {
@@ -47,14 +48,14 @@ public class PlayerManager : MonoBehaviour
         TurnManager.StartNewGame();
     }
 
-    private bool GridSpaceTaken(Transform check)
+    private bool GridSpaceTaken(Transform check, int p)
     {
         for (int i = 0; i < players.Count; i++) //Add objects
         {
-            if (check.position == players[i].character.transform.position && players[i].alive)
+            if (check.position == players[i].character.transform.position && players[i].alive && p != players[i].playerNumber)
             {
                 KillPlayer(players[i].playerNumber);
-                return true;
+                return false;
             }
         }
         return false;
@@ -63,14 +64,25 @@ public class PlayerManager : MonoBehaviour
     private bool AmmoInSpace(Transform check) // TURN INTO AMMO
     {
 
-        for (int i = 0; i < ammo.Count; i++) //Add objects
+        for (int i = 0; i < ammoPiles.Count; i++) //Add objects
         {
-            if (check.position == ammo[i].transform.position)
+            if (check.position == ammoPiles[i].position)
             {
+               
                 return true;
             }
         }
         return false;
+    }
+
+    private void RemoveAmmo(Transform ammo)
+    {
+        foreach (Transform a in ammoPiles)
+        {
+            if (ammo.position.x == a.position.x && ammo.position.y == a.position.y)
+            Destroy(a.gameObject);
+            ammoPiles.Remove(a);
+        }
     }
 
     public void MovePlayer(int p, int dir, bool dontUpdate = false) // p = player number
@@ -88,16 +100,13 @@ public class PlayerManager : MonoBehaviour
                     {
                         direction.position = new Vector2(direction.position.x, direction.position.y + 1);
                         bool spaceTaken;
-                        spaceTaken = GridSpaceTaken(direction);
-
-                        players[i].character.transform.position = new Vector2(players[i].character.transform.position.x,
-                        players[i].character.transform.position.y + 1);
-
+                        spaceTaken = GridSpaceTaken(direction, p);
 
                         spaceTaken = AmmoInSpace(direction);
                         if (spaceTaken)
                         {
-                            //AMMO UP
+                            players[i].ammo += 1;
+                            RemoveAmmo(players[i].character.transform);
                         }
 
 
@@ -114,16 +123,14 @@ public class PlayerManager : MonoBehaviour
                     {
                         direction.position = new Vector2(direction.position.x + 1, direction.position.y);
                         bool spaceTaken;
-                        spaceTaken = GridSpaceTaken(direction);
+                        spaceTaken = GridSpaceTaken(direction, p);
                         if (!spaceTaken)
                         {
-                            players[i].character.transform.position = new Vector2(players[i].character.transform.position.x + 1,
-                            players[i].character.transform.position.y);
 
                             spaceTaken = AmmoInSpace(direction);
                             if (spaceTaken)
                             {
-                                //AMMO UP
+                                players[i].ammo += 1;
                             }
                         }
                         else
@@ -138,20 +145,20 @@ public class PlayerManager : MonoBehaviour
                 }
                 else if (dir == 3)
                 {
+
                     if (players[i].character.transform.position.y != GameManager.GM.gridSize.y)
                     {
                         direction.position = new Vector2(direction.position.x, direction.position.y - 1);
                         bool spaceTaken;
-                        spaceTaken = GridSpaceTaken(direction);
+                        spaceTaken = GridSpaceTaken(direction, p);
                         if (!spaceTaken)
                         {
-                            players[i].character.transform.position = new Vector2(players[i].character.transform.position.x,
-                            players[i].character.transform.position.y - 1);
+
 
                             spaceTaken = AmmoInSpace(direction);
                             if (spaceTaken)
                             {
-                                //AMMO UP
+                                players[i].ammo += 1;
                             }
                         }
                         else
@@ -170,16 +177,14 @@ public class PlayerManager : MonoBehaviour
                     {
                         direction.position = new Vector2(direction.position.x - 1, direction.position.y);
                         bool spaceTaken;
-                        spaceTaken = GridSpaceTaken(direction);
+                        spaceTaken = GridSpaceTaken(direction, p);
                         if (!spaceTaken)
                         {
-                            players[i].character.transform.position = new Vector2(players[i].character.transform.position.x - 1,
-                            players[i].character.transform.position.y);
 
                             spaceTaken = AmmoInSpace(direction);
                             if (spaceTaken)
                             {
-                                //AMMO UP
+                                players[i].ammo += 1;
                             }
                         }
                         else
@@ -245,6 +250,10 @@ public class PlayerManager : MonoBehaviour
                     Destroy(b.body);
                     bullets.Remove(b);
                 }
+                foreach (Transform t in bulletManager.transform)
+                {
+                    Destroy(t.gameObject);
+                }
                 StartCoroutine("ChapterDoneDelay", 0.5f);
             }
         }
@@ -253,6 +262,7 @@ public class PlayerManager : MonoBehaviour
     IEnumerator ChapterDoneDelay(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
+        
         TurnManager.EnterCombat(true);
     }
 
@@ -287,79 +297,87 @@ public class PlayerManager : MonoBehaviour
     {
 
 
-        Bullet toRemove = new Bullet(0, 0);
+        List<Bullet> toRemove = new List<Bullet>();
         bool removeBullet = false;
+        bool splitBullet = false;
+        List<Bullet> splitIndex = new List<Bullet>();
+        List<Bullet> fireIndex = new List<Bullet>();
+        
         foreach (Bullet b in bullets)
         {
             if (b.direction == 1)
             {
-                if (b.type != 2)
+                if (b.type == 2 && b.body.transform.position.y >= 0)
                 {
-                    b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y + 1);
+                    b.body.transform.position = new Vector2(b.body.transform.position.x, GameManager.GM.gridSize.y);
                 }
                 else
                 {
-                    b.body.transform.position = new Vector2(b.body.transform.position.x, GameManager.GM.gridSize.y);
+                    
+                    b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y + 1);
                 }
                 for (int p = 0; p < players.Count; p++)
                 {
                     if ((b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
                     {
                         KillPlayer(players[p].playerNumber);
-                        toRemove = b;
+                        toRemove.Add(b);
                         removeBullet = true;
                     }
                 }
             }
             else if (b.direction == 2)
             {
-                if (b.type != 2)
+                if (b.type == 2 && b.body.transform.position.x >= GameManager.GM.gridSize.x)
                 {
-                    b.body.transform.position = new Vector2(b.body.transform.position.x + 1, b.body.transform.position.y);
+                    b.body.transform.position = new Vector2(0, b.body.transform.position.y);
                 }
                 else
                 {
-                    b.body.transform.position = new Vector2(0, b.body.transform.position.y);
+                    
+                    b.body.transform.position = new Vector2(b.body.transform.position.x + 1, b.body.transform.position.y);
                 }
                 for (int p = 0; p < players.Count; p++)
                 {
                     if ((b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
                     {
                         KillPlayer(players[p].playerNumber);
-                        toRemove = b;
+                        toRemove.Add(b);
                         removeBullet = true;
                     }
                 }
             }
             else if (b.direction == 3)
             {
-                if (b.type != 2)
+                if (b.type == 2 && b.body.transform.position.y <= GameManager.GM.gridSize.y)
                 {
-                    b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y - 1);
+                    b.body.transform.position = new Vector2(b.body.transform.position.x, 0);
                 }
                 else
                 {
-                    b.body.transform.position = new Vector2(b.body.transform.position.x, 0);
+                    
+                    b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y - 1);
                 }
                 for (int p = 0; p < players.Count; p++)
                 {
                     if ((b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
                     {
                         KillPlayer(players[p].playerNumber);
-                        toRemove = b;
+                        toRemove.Add(b);
                         removeBullet = true;
                     }
                 }
             }
             else if (b.direction == 4)
             {
-                if (b.type != 2)
+                if (b.type == 2 && b.body.transform.position.x <= 0)
                 {
-                    b.body.transform.position = new Vector2(b.body.transform.position.x - 1, b.body.transform.position.y);
+                    b.body.transform.position = new Vector2(GameManager.GM.gridSize.x, b.body.transform.position.y);
                 }
                 else
                 {
-                    b.body.transform.position = new Vector2(GameManager.GM.gridSize.x, b.body.transform.position.y);
+                    
+                    b.body.transform.position = new Vector2(b.body.transform.position.x - 1, b.body.transform.position.y);
                 }
                 for (int p = 0; p < players.Count; p++)
                 {
@@ -367,33 +385,65 @@ public class PlayerManager : MonoBehaviour
                     if ((b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
                     {
                         KillPlayer(players[p].playerNumber);
-                        toRemove = b;
+                        toRemove.Add(b);
                         removeBullet = true;
                     }
 
                 }
             }
             b.movesLeft -= 1;
-            if (b.movesLeft == 0)
+            //Debug.Log("Moves Left = " + b.movesLeft);
+            if (b.type == 1)
             {
-                toRemove = b;
+                fireIndex.Add(b);
+            }
+            if (b.type == 4 && b.movesLeft < 1)
+            {
+                splitBullet = true;
+                splitIndex.Add(b);
+                toRemove.Add(b);
+                removeBullet = true;
+            }
+            else if (b.movesLeft < 1)
+            {
+                toRemove.Add(b);
                 removeBullet = true;
             }
         }
-
-        if (removeBullet)
+        if (fireIndex.Count > 0)
         {
-            Destroy(toRemove.body);
-            bullets.Remove(toRemove);
+            foreach (Bullet f in fireIndex)
+            {
+                
+                MakeBullet(0, new Vector2(f.body.transform.position.x, f.body.transform.position.y), 0, 1);
+            }
+            
         }
+        if (splitBullet)
+        {
+            foreach (Bullet s in splitIndex)
+            {
+                MakeBullet(GetTShotDir(s.direction, 1), new Vector2(s.body.transform.position.x, s.body.transform.position.y), 0, 2);
+                MakeBullet(GetTShotDir(s.direction, 2), new Vector2(s.body.transform.position.x, s.body.transform.position.y), 0, 2);
+            }
+        }
+            if (removeBullet)
+            {
+                foreach (Bullet r in toRemove)
+                {
+                    Destroy(r.body);
+                    bullets.Remove(r);
+                }
+            }
     }
 
-    private void MakeBullet(int dir, Transform check, int playerNum = 0)
+    private void MakeBullet(int dir, Vector2 check, int playerNum = 0, int range = 0) // dont use range 1
     {
-        float posX = check.position.x;
-        float posY = check.position.y;
+        float posX = check.x;
+        float posY = check.y;
         Vector2 spawnPos = new Vector2();
         int length = 0;
+
         if (dir == 1)
         {
             length = (int)(0 - posY);
@@ -414,22 +464,48 @@ public class PlayerManager : MonoBehaviour
             length = (int)(0 + posX);
             spawnPos = new Vector2(posX - 1, posY);
         }
-
-        if (length > players[playerNum-1].range && players[playerNum].playerClass != 2)
+        else
         {
-            length = players[playerNum].range;
-        }
-        else if (players[playerNum-1].playerClass == 2)
-        {
-            length = players[playerNum].range;
+            spawnPos = new Vector2(posX, posY);
         }
 
-        UpdateBullets();
+        if (playerNum > 0) // only not if bullets make bullets
+        {
+            if (length > players[playerNum - 1].range)
+            {
+                length = players[playerNum - 1].range;
+
+            }
+            if (players[playerNum - 1].playerClass == 3 && players[playerNum - 1].special)
+            {
+                length += 2;
+                
+            }
+            if (players[playerNum - 1].playerClass == 2 && players[playerNum - 1].special)
+            {
+                length = players[playerNum - 1].range;
+            }
+        }
+        else if (length > range)
+        {
+            length = range;
+        }
+        else if (range == 1)
+        {
+            length = 5;
+        }
+        if (range == 0)
+        {
+            UpdateBullets();
+        }
         if (playerNum > 0)
         {
-            if (players[playerNum-1].special)
+
+            Debug.Log(players[playerNum - 1].special);
+            if (players[playerNum - 1].special)
             {
-                bullets.Add(new Bullet(dir, length, players[playerNum].playerClass));
+
+                bullets.Add(new Bullet(dir, length, players[playerNum - 1].playerClass));
             }
             else
             {
@@ -439,12 +515,24 @@ public class PlayerManager : MonoBehaviour
         else
         {
             bullets.Add(new Bullet(dir, length));
+            Debug.Log("ADDED");
         }
 
         bullets[bullets.Count - 1].body = Instantiate(bulletGO, spawnPos, Quaternion.identity);
+        bullets[bullets.Count - 1].body.transform.parent = bulletManager.transform;
+
+        if (bullets[bullets.Count - 1].body.transform.parent == bulletManager.transform)
+        {
+            Debug.Log("Parented");
+        }
+        else
+        {
+            Debug.Log("not");
+        }
+
         if (bullets[bullets.Count - 1].type == 3)
         {
-            MovePlayer(playerNum, dir, true);
+            MovePlayer(playerNum, GetRecoilDir(dir), true);
         }
     }
 
@@ -454,7 +542,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (players[i].playerNumber == p)
             {
-                MakeBullet(dir, players[i].character.transform, p);
+                MakeBullet(dir, new Vector2(players[i].character.transform.position.x, players[i].character.transform.position.y), p);
             }
         }
 
@@ -504,6 +592,54 @@ public class PlayerManager : MonoBehaviour
         else
         {
             return 2;
+        }
+    }
+
+    private int GetTShotDir(int dir, int side)
+    {
+        if (dir == 1)
+        {
+            if (side == 1)
+            {
+                return 4;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+        else if (dir == 2)
+        {
+            if (side == 1)
+            {
+                return 1;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+        else if (dir == 3)
+        {
+            if (side == 1)
+            {
+                return 2;
+            }
+            else
+            {
+                return 4;
+            }
+        }
+        else
+        {
+            if (side == 1)
+            {
+                return 3;
+            }
+            else
+            {
+                return 1;
+            }
         }
     }
 
