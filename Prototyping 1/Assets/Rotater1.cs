@@ -27,27 +27,13 @@ public class Rotater1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (Input.GetKeyDown("joystick button 0") && active == true)
-        {
-            rotater1.enabled = false;
-            selected = true;
-        }
-        if (Input.GetKeyDown("joystick button 1") && active == true)
-        {
-            rotater1.enabled = false;
-            rotater.enabled = true;
-        }
-        if (Input.GetKeyDown("joystick button 0") && active == false)
-        {
-            active = true;
-        }*/
         if(Counter.rotaterCount == 1)
         { 
             parts[activeCount].SetActive(true);
             if (Input.GetKeyDown("joystick button 5"))
             {
                 previousCount = activeCount;
-                if (activeCount > 1)
+                if (activeCount >= parts.Count - 1)
                 {
                     activeCount = 0;
                 }
@@ -60,9 +46,9 @@ public class Rotater1 : MonoBehaviour
             if (Input.GetKeyDown("joystick button 4"))
             {
                 previousCount = activeCount;
-                if (activeCount < 1)
+                if (activeCount == 0)
                 {
-                    activeCount = 2;
+                    activeCount = parts.Count - 1;
                 }
                 else
                 {

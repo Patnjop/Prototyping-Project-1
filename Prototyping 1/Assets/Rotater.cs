@@ -31,7 +31,7 @@ public class Rotater : MonoBehaviour
             if (Input.GetKeyDown("joystick button 5"))
             {
                 previousCount = activeCount;
-                if (activeCount > 1)
+                if (activeCount == parts.Count - 1)
                 {
                     activeCount = 0;
                 }
@@ -44,9 +44,9 @@ public class Rotater : MonoBehaviour
             if (Input.GetKeyDown("joystick button 4"))
             {
                 previousCount = activeCount;
-                if (activeCount < 1)
+                if (activeCount == 0)
                 {
-                    activeCount = 2;
+                    activeCount = parts.Count - 1;
                 }
                 else
                 {
