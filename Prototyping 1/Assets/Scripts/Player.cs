@@ -16,7 +16,7 @@ public class Player
     public int ammo = 0;
     public int range;
     
-    public Player (int playerNo, string charName, GameObject appearObject, int classNum, int shootRange, GameObject optChar = null) // Add more
+    public Player (int playerNo, string charName, GameObject appearObject, int classNum, GameObject optChar = null) // Add more
     {
         playerNumber = playerNo;
         name = charName;
@@ -24,6 +24,7 @@ public class Player
         character = optChar;
         playerClass = classNum;
         alive = true;
-        range = shootRange;
+        ammo = 10;
+        range = 5;
     }
 }

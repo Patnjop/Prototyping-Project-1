@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour
     private int turnsMade = 0;
     private int moveTypeSelected = 0; // 0 in none, 1 is move, 2 is attack
     private int direction; // 1 up, 2 right, 3 down, 4 left
+    private bool isSpecial;
 
     private float timer;
     private float seconds;
@@ -28,6 +29,7 @@ public class PlayerInput : MonoBehaviour
         awaitingInput = true;
         moveList = new List<Move>();
         playerNumber = playerNumberInt.ToString();
+        turnManager.playerManager.PlayerSpecial(false, playerNumberInt-1);
     }
 
     private int GetAnalogDirection()
@@ -73,6 +75,7 @@ public class PlayerInput : MonoBehaviour
                 direction = 0;
                 timer = 0;
                 seconds = 0;
+                turnManager.playerManager.PlayerSpecial(false, playerNumberInt);
                 turnManager.IncrementInfo(playerNumberInt, turnsMade);
             }
 
@@ -92,6 +95,15 @@ public class PlayerInput : MonoBehaviour
                         moveTypeSelected = 2;
                         Debug.Log("Pressed Y");
                     }
+                    else if (Input.GetButtonDown("Joystick " + playerNumber + " Option 1"))
+                    {
+                        moveTypeSelected = 2;
+                        isSpecial = true;
+                        
+
+
+
+                    }
                 }
                 else if (moveTypeSelected != 0)
                 {
@@ -110,13 +122,51 @@ public class PlayerInput : MonoBehaviour
                         if (seconds >= secondsTillSelect)
                         {
                             Debug.Log("Null Ref Debug " + playerNumberInt + "," + turnsMade + "," + moveTypeSelected + "," + direction);
-                            moveList.Add(new Move(playerNumberInt, turnsMade, moveTypeSelected, direction));
+                            if (isSpecial)
+                            {
+                                int cost = 0;
+                                int pClass = turnManager.playerManager.GetClass(playerNumberInt);
+                                if (pClass == 1)
+                                {
+                                    cost = 5;
+                                }
+                                else if (pClass == 2)
+                                {
+                                    cost = 2;
+                                }
+                                else if (pClass == 3)
+                                {
+                                    cost = 3;
+                                }
+                                else
+                                {
+                                    cost = 5;
+                                }
+
+                                if (turnManager.playerManager.GetAmmo(playerNumberInt) < cost)
+                                {
+                                    isSpecial = false;
+                                }
+                                else
+                                {
+                                    turnManager.playerManager.UseAmmo(cost, playerNumberInt);
+                                }
+                            }
+                            if (isSpecial)
+                            {
+                                moveList.Add(new Move(playerNumberInt, turnsMade, moveTypeSelected, direction, true));
+                            }
+                            else
+                            {
+                                moveList.Add(new Move(playerNumberInt, turnsMade, moveTypeSelected, direction, false));
+                            }
                             turnsMade += 1;
                             Debug.Log("Move added, moves made: " + turnsMade + " move type: " + moveTypeSelected + " direction: " + direction);
                             moveTypeSelected = 0;
                             direction = 0;
                             timer = 0;
                             seconds = 0;
+                            isSpecial = false;
                             turnManager.FillCircle(playerNumberInt, 0, secondsTillSelect);
                             turnManager.IncrementInfo(playerNumberInt, turnsMade);
                             
@@ -146,6 +196,7 @@ public class PlayerInput : MonoBehaviour
                     direction = 0;
                     timer = 0;
                     seconds = 0;
+                    isSpecial = false;
                 }
             }
         }

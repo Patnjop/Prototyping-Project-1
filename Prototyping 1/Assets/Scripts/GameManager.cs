@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         foreach (Player p in players)
         {
             Debug.Log("Clone");
-            storedPlayers.Add(new Player(p.playerNumber, p.name, p.appearance, p.playerClass, p.range, p.character));
+            storedPlayers.Add(new Player(p.playerNumber, p.name, p.appearance, p.playerClass, p.character));
         }
         
     }

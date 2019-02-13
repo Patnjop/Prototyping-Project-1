@@ -85,6 +85,19 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private bool HitBullet(Transform check)
+    {
+        for (int i = 0; i < bullets.Count; i++) //Add objects
+        {
+            if (check.position == bullets[i].body.transform.position)
+            {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void MovePlayer(int p, int dir, bool dontUpdate = false) // p = player number
     {
         Debug.Log("Moving player: " + p + " in direction " + dir);
@@ -101,7 +114,10 @@ public class PlayerManager : MonoBehaviour
                         direction.position = new Vector2(direction.position.x, direction.position.y + 1);
                         bool spaceTaken;
                         spaceTaken = GridSpaceTaken(direction, p);
-
+                        if (HitBullet(players[i].character.transform))
+                        {
+                            KillPlayer(players[i].playerNumber);
+                        }
                         spaceTaken = AmmoInSpace(direction);
                         if (spaceTaken)
                         {
@@ -123,6 +139,10 @@ public class PlayerManager : MonoBehaviour
                     {
                         direction.position = new Vector2(direction.position.x + 1, direction.position.y);
                         bool spaceTaken;
+                        if (HitBullet(players[i].character.transform))
+                        {
+                            KillPlayer(players[i].playerNumber);
+                        }
                         spaceTaken = GridSpaceTaken(direction, p);
                         if (!spaceTaken)
                         {
@@ -150,6 +170,10 @@ public class PlayerManager : MonoBehaviour
                     {
                         direction.position = new Vector2(direction.position.x, direction.position.y - 1);
                         bool spaceTaken;
+                        if (HitBullet(players[i].character.transform))
+                        {
+                            KillPlayer(players[i].playerNumber);
+                        }
                         spaceTaken = GridSpaceTaken(direction, p);
                         if (!spaceTaken)
                         {
@@ -177,6 +201,10 @@ public class PlayerManager : MonoBehaviour
                     {
                         direction.position = new Vector2(direction.position.x - 1, direction.position.y);
                         bool spaceTaken;
+                        if (HitBullet(players[i].character.transform))
+                        {
+                            KillPlayer(players[i].playerNumber);
+                        }
                         spaceTaken = GridSpaceTaken(direction, p);
                         if (!spaceTaken)
                         {
@@ -214,7 +242,10 @@ public class PlayerManager : MonoBehaviour
 
         if (aliveCount > 1)
         {
-
+            foreach (Player p in players)
+            {
+                p.special = false;
+            }
             TurnManager.EnterCombat();
         }
         else // FIX
@@ -575,6 +606,18 @@ public class PlayerManager : MonoBehaviour
         return aliveCount;
     }
 
+    public void PlayerSpecial(bool active, int num)
+    {
+        if (active)
+        {
+            players[num].special = true;
+        }
+        else
+        {
+            players[num].special = false;
+        }
+    }
+
     private int GetRecoilDir(int dir)
     {
         if (dir == 1)
@@ -593,6 +636,25 @@ public class PlayerManager : MonoBehaviour
         {
             return 2;
         }
+    }
+
+    public int GetAmmo(int p)
+    {
+        return players[p].ammo;
+    }
+
+    public void UseAmmo(int ammoCost, int p)
+    {
+        players[p].ammo -= ammoCost;
+    }
+
+    public int GetClass(int p)
+    {
+        return players[p].playerClass;
+    }
+    public void SetSpecial(int p)
+    {
+        players[p].special = true;
     }
 
     private int GetTShotDir(int dir, int side)

@@ -7,7 +7,7 @@ using System.Linq;
 
 public class TurnManager : MonoBehaviour
 {
-    private PlayerManager playerManager;
+    public PlayerManager playerManager;
     private int roundNumber = 1;
     private int playerAmount;
     private List<PlayerInput> playerInputs = new List<PlayerInput>();
@@ -115,6 +115,10 @@ public class TurnManager : MonoBehaviour
         }
         else if (movesQueue.Count > 0)
         {
+            if (movesQueue.Peek().special == true)
+            {
+                playerManager.SetSpecial(movesQueue.Peek().player);
+            }
             MakeMove(movesQueue.Dequeue());
         }
         else
