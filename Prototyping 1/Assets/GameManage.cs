@@ -11,6 +11,7 @@ public class GameManage : MonoBehaviour
     public static string selectedAbility;
     List<string> abilities = new List<string>();
     int count = 0;
+    public int Controllernumber;
 
     // Start is called before the first frame update
     void Start()
@@ -31,9 +32,9 @@ public class GameManage : MonoBehaviour
             Rotater1.selected = false;
             rotater1.enabled = true;
         }*/
-        if (Counter.rotaterCount == 2)
+        if (Counter.rotaterCount1 == 2)
         {
-            if (Input.GetKeyDown("joystick button 5"))
+            if (Input.GetButtonDown("Joystick " + Controllernumber + " Bumper R"))
             {
                 if (count < 3)
                 {
@@ -44,7 +45,7 @@ public class GameManage : MonoBehaviour
                     count = 0;
                 }
             }
-            if (Input.GetKeyDown("joystick button 4"))
+            if (Input.GetButtonDown("Joystick " + Controllernumber + " Bumper L"))
             {
                 if (count > 0)
                 {
@@ -56,9 +57,9 @@ public class GameManage : MonoBehaviour
                 }
             }
         }
-        if (Counter.rotaterCount == 3)
+        if (Counter.rotaterCount1 == 3)
         {
-            if (Input.GetKeyDown("joystick button 0"))
+            if (Input.GetButtonDown("joystick button 0"))
             {
                 selectedAbility = abilities[count];
                 Debug.Log(selectedAbility);

@@ -20,8 +20,14 @@ public class PlayerInput : MonoBehaviour
 
     private List<Move> moveList;
 
-    
 
+    private void Start()
+    {
+        foreach (string JoystickName in Input.GetJoystickNames())
+        {
+            print(JoystickName);
+        }
+    }
 
     public void GetInput()
     {
@@ -30,6 +36,7 @@ public class PlayerInput : MonoBehaviour
         moveList = new List<Move>();
         playerNumber = playerNumberInt.ToString();
         //turnManager.playerManager.PlayerSpecial(false, playerNumberInt-1);
+        
     }
 
     private int GetAnalogDirection()

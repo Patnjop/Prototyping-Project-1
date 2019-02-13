@@ -10,6 +10,7 @@ public class Rotater1 : MonoBehaviour
     Rotater1 rotater1;
     int previousCount;
     int activeCount = 0;
+    public int Controllernumber;
     bool active;
     public static bool selected = false;
 
@@ -17,7 +18,7 @@ public class Rotater1 : MonoBehaviour
     void Start()
     {
         rotater1 = gameObject.GetComponent<Rotater1>();
-        foreach (GameObject objects in GameObject.FindGameObjectsWithTag(tagName))
+        foreach (GameObject objects in GameObject.FindGameObjectsWithTag(tagName + Controllernumber))
         {
             parts.Add(objects);
             objects.SetActive(false);
@@ -27,10 +28,10 @@ public class Rotater1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Counter.rotaterCount == 1)
+        if(Counter.rotaterCount1 == 1)
         { 
             parts[activeCount].SetActive(true);
-            if (Input.GetKeyDown("joystick button 5"))
+            if (Input.GetButtonDown("Joystick " + Controllernumber + " Bumper R"))
             {
                 previousCount = activeCount;
                 if (activeCount >= parts.Count - 1)
@@ -43,7 +44,7 @@ public class Rotater1 : MonoBehaviour
                 }
                 parts[previousCount].SetActive(false);
             }
-            if (Input.GetKeyDown("joystick button 4"))
+            if (Input.GetButtonDown("Joystick " + Controllernumber + " Bumper R"))
             {
                 previousCount = activeCount;
                 if (activeCount == 0)

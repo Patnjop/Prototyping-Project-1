@@ -29,7 +29,7 @@ public class NameGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Counter.rotaterCount == 3)
+        if (Counter.rotaterCount1 == 3)
         {
             if (Input.GetKeyDown("joystick button 5"))
             {
@@ -86,7 +86,11 @@ public class NameGenerator : MonoBehaviour
                     }
                     else
                     {
-                        int rnd1 = Random.Range(0, 2);
+                        int rnd1 = Random.Range(0, 3);
+                        if (rnd1 == 2)
+                        {
+                            rnd1 = 0;
+                        }
                         surnumbers.Add(rnd1);
                     }
                 }
