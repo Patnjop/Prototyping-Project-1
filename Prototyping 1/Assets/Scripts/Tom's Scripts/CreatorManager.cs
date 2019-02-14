@@ -10,6 +10,7 @@ public class CreatorManager : MonoBehaviour
     private List<CycleOption> playerCycleOptions = new List<CycleOption>();
     [SerializeField] private GameObject[] playerUIInfo;
     private List<Player> players = new List<Player>();
+    [SerializeField] private GameObject[] readyCovers;
 
     private void Update()
     {
@@ -106,9 +107,10 @@ public class CreatorManager : MonoBehaviour
     public void PlayerReady(Appearance appearance, int body, int head)
     {
         playerCycleOptions[appearance.playerNumber - 1].enabled = false;
+        readyCovers[appearance.playerNumber - 1].SetActive(true);
         players.Add(new Player(appearance.playerNumber, appearance.name, head, body, appearance.ability));
 
-        if (players.Count == playerCycleOptions.Count)
+        if (players.Count == playerCycleOptions.Count && players.Count > 1)
         {
             GameManager.GM.SetGameData(players);
         }

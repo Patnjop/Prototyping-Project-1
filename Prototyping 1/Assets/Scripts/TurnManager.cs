@@ -14,6 +14,7 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private int holdDirectionTime = 2;
     private List<Move> moves = new List<Move>();
     private Queue<Move> movesQueue = new Queue<Move>();
+    public GameObject[] playerTurnInfo;
     public GameObject inputInfo, worldCanvas;
     private List<GameObject> infoObjectList = new List<GameObject>();
     public int movesPerTurn;
@@ -48,7 +49,8 @@ public class TurnManager : MonoBehaviour
         {
 
             playerInputs[i].GetInput();
-            infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
+            playerTurnInfo[i].SetActive(true);
+            //infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
 
         }
     }
@@ -64,14 +66,16 @@ public class TurnManager : MonoBehaviour
             if (infoObjectList.Count == 0)
             {
                 playerInputs[i].GetInput();
-                infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
+                playerTurnInfo[i].SetActive(true);
+                //infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
             }
             else if (playerManager.PlayerAlive(i + 1) && infoObjectList.Count > 0)
             {
                 playerInputs[i].GetInput();
-                infoObjectList[i].SetActive(true);
-                infoObjectList[i].transform.position = playerManager.GetPlayerPos(i);
-                infoObjectList[i].GetComponentInChildren<TextMeshProUGUI>().text = "0/3";
+                playerTurnInfo[i].SetActive(true);
+                //infoObjectList[i].SetActive(true);
+                //infoObjectList[i].transform.position = playerManager.GetPlayerPos(i);
+                playerTurnInfo[i].GetComponentInChildren<TextMeshProUGUI>().text = "0/3";
             }
 
         }
@@ -79,17 +83,17 @@ public class TurnManager : MonoBehaviour
 
     public void FillCircle(int playerNum, float amount, float max)
     {
-        infoObjectList[playerNum-1].GetComponentInChildren<Image>().fillAmount = (amount / max);
+        playerTurnInfo[playerNum - 1].GetComponentInChildren<Image>().fillAmount = (amount / max);
     }
 
     public void IncrementInfo(int playerNum, int amount)
     {
-        infoObjectList[playerNum-1].GetComponentInChildren<TextMeshProUGUI>().text = amount + "/3";
+        playerTurnInfo[playerNum - 1].GetComponentInChildren<TextMeshProUGUI>().text = amount + "/3";
     }
 
     public void AddPlayerMoves(List<Move> moveList, int playerNum)
     {
-        infoObjectList[playerNum - 1].GetComponentInChildren<TextMeshProUGUI>().text = "Ready!";
+        playerTurnInfo[playerNum - 1].GetComponentInChildren<TextMeshProUGUI>().text = "Ready!";
         moves.AddRange(moveList);
         moves = moves.OrderBy(o => o.moveNumber).ToList();
         

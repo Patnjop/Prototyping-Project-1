@@ -242,10 +242,10 @@ public class PlayerManager : MonoBehaviour
                     Destroy(b.body);
                     bullets.Remove(b);
                 }
-                foreach (Transform t in bulletManager.transform)
+                /*foreach (Transform t in bulletManager.transform)
                 {
                     Destroy(t.gameObject);
-                }
+                }*/
                 StartCoroutine("ChapterDoneDelay", 0.5f);
             }
         }
@@ -517,7 +517,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         bullets[bullets.Count - 1].body = Instantiate(bulletGO, spawnPos, Quaternion.identity);
-        bullets[bullets.Count - 1].body.transform.parent = bulletManager.transform;
+        //bullets[bullets.Count - 1].body.transform.parent = bulletManager.transform;
 
         if (bullets[bullets.Count - 1].body.transform.parent == bulletManager.transform)
         {
