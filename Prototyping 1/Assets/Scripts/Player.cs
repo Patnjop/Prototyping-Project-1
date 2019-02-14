@@ -8,7 +8,8 @@ public class Player
     public int playerNumber;
     public bool alive;
     public string name;
-    public GameObject appearance;
+    public int head;
+    public int body;
     public GameObject character; //Instantiated after object made
     public int points;
     public int playerClass; // 1 = toxic, 2 = warp, 3 = recoil, 4 = T-Shot
@@ -16,11 +17,12 @@ public class Player
     public int ammo = 0;
     public int range;
     
-    public Player (int playerNo, string charName, GameObject appearObject, int classNum, GameObject optChar = null) // Add more
+    public Player (int playerNo, string charName, int playerHead, int playerBody, int classNum, GameObject optChar = null) // Add more
     {
         playerNumber = playerNo;
         name = charName;
-        appearance = appearObject;
+        head = playerHead;
+        body = playerBody;
         character = optChar;
         playerClass = classNum;
         alive = true;

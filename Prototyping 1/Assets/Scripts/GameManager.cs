@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -46,6 +47,9 @@ public class GameManager : MonoBehaviour
         players = playerList;
         playerAmount = players.Count;
         playerScores = new int[playerAmount];
+        players = players.OrderBy(o => o.playerNumber).ToList();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public List<Player> AddInstantiatedCharacters(List<GameObject> characterList)
@@ -71,7 +75,7 @@ public class GameManager : MonoBehaviour
         foreach (Player p in players)
         {
             Debug.Log("Clone");
-            storedPlayers.Add(new Player(p.playerNumber, p.name, p.appearance, p.playerClass, p.character));
+            storedPlayers.Add(new Player(p.playerNumber, p.name, p.head, p.body, p.playerClass, p.character));
         }
         
     }
@@ -88,10 +92,10 @@ public class GameManager : MonoBehaviour
         PlayerManager.TurnManager = turnManager;
 
         PlayerManager.SpawnPlayers(players);
-        foreach (Player p in players)
+        /*foreach (Player p in players)
         {
             p.character.SetActive(true);
-        }
+        }*/
         UIManager.SetScores(playerScores);
     }
 

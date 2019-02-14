@@ -1224,80 +1224,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354001951}
   m_CullTransparentMesh: 0
---- !u!1 &1372682653
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1372682656}
-  - component: {fileID: 1372682655}
-  m_Layer: 0
-  m_Name: Game Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1372682655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1372682653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efa60a37dc6636249ba7a9d16cc5d693, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridSize: {x: 6, y: -6}
-  storedPlayerManager: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-    type: 3}
-  players:
-  - playerNumber: 1
-    alive: 1
-    name: Muffin
-    appearance: {fileID: 0}
-    character: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
-      type: 3}
-    points: 0
-    playerClass: 1
-    special: 0
-    ammo: 10
-    range: 5
-  - playerNumber: 2
-    alive: 1
-    name: Waffle
-    appearance: {fileID: 0}
-    character: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
-      type: 3}
-    points: 0
-    playerClass: 2
-    special: 0
-    ammo: 10
-    range: 5
-  storedPlayers: []
-  firstGame: 1
-  UIManager: {fileID: 1325783225}
-  playerScores: 0000000000000000
---- !u!4 &1372682656
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1372682653}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4535052, y: 0.701593, z: 0.11613305}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 23145022831899096}
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1489763321
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,6 +1315,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1533406234}
+  - component: {fileID: 1533406235}
   m_Layer: 0
   m_Name: Ammo Holder
   m_TagString: Untagged
@@ -1415,6 +1342,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1533406235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533406233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e37d983aaa4260b4ab1eafea4feb2845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1553854532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1733,118 +1672,107 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &23145022831899096 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
-    type: 3}
-  m_PrefabInstance: {fileID: 3820532770464209512}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &3820532770464209512
+--- !u!1001 &6496715256710039599
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1372682656}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6540808252487273252, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711986, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_Name
-      value: Player Manager
+      value: Game Manager
       objectReference: {fileID: 0}
-    - target: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-        type: 3}
-      propertyPath: ammoPiles.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-        type: 3}
-      propertyPath: map
-      value: 
-      objectReference: {fileID: 550637037}
-    - target: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-        type: 3}
-      propertyPath: bulletManager
-      value: 
-      objectReference: {fileID: 942973282}
-    - target: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-        type: 3}
-      propertyPath: ammoPiles.Array.data[0]
-      value: 
-      objectReference: {fileID: 1018030847}
-    - target: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-        type: 3}
-      propertyPath: ammoPiles.Array.data[1]
-      value: 
-      objectReference: {fileID: 1341940091}
-    - target: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-        type: 3}
-      propertyPath: ammoPiles.Array.data[2]
-      value: 
-      objectReference: {fileID: 2011597349}
-    - target: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-        type: 3}
-      propertyPath: ammoPiles.Array.data[3]
-      value: 
-      objectReference: {fileID: 1553854533}
-    - target: {fileID: 7383251001831591914, guid: 68f510ec4d613a94d988a863bf4f8c12,
-        type: 3}
-      propertyPath: ammoToGain
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.4535052
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.701593
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.11613305
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 23145022831899096, guid: 68f510ec4d613a94d988a863bf4f8c12,
+    - target: {fileID: 6496715255362711951, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: UIManager
+      value: 
+      objectReference: {fileID: 1325783225}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: map
+      value: 
+      objectReference: {fileID: 550637037}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: bulletManager
+      value: 
+      objectReference: {fileID: 942973282}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: ammoPiles.Array.data[0]
+      value: 
+      objectReference: {fileID: 1018030847}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: ammoPiles.Array.data[1]
+      value: 
+      objectReference: {fileID: 1341940091}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: ammoPiles.Array.data[2]
+      value: 
+      objectReference: {fileID: 2011597349}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: ammoPiles.Array.data[3]
+      value: 
+      objectReference: {fileID: 1553854533}
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 68f510ec4d613a94d988a863bf4f8c12, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c, type: 3}

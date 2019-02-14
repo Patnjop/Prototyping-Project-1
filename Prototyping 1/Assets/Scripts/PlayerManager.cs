@@ -15,19 +15,21 @@ public class PlayerManager : MonoBehaviour
     public List<Transform> ammoPiles;
     public int ammoToGain;
 
+    [SerializeField] private GameObject playerObject;
+    [SerializeField] private Color[] playerColours;
+
     public void SpawnPlayers(List<Player> playerList)
     {
         if (GameManager.GM.firstGame)
         {
-            Debug.Log("CALLED");
             List<GameObject> activePlayers = new List<GameObject>();
-            Debug.Log("Spawning Players");
+         
             foreach (Player p in playerList)
             {
 
-                GameObject Player = Instantiate(p.character, spawnLocation[p.playerNumber - 1], Quaternion.identity);
-                Player.SetActive(true);
-                activePlayers.Add(Player);
+                p.character = Instantiate(playerObject, spawnLocation[p.playerNumber - 1], Quaternion.identity) as GameObject;
+                p.character.SetActive(true);
+                activePlayers.Add(p.character);
 
 
 
@@ -620,6 +622,14 @@ public class PlayerManager : MonoBehaviour
     public void SetSpecial(int p)
     {
         players[p - 1].special = true;
+    }
+
+    public void SetAmmoPiles(GameObject ammoPileParent)
+    {
+        foreach(Transform child in ammoPileParent.transform)
+        {
+            ammoPiles.Add(child);
+        }
     }
 
     private int GetTShotDir(int dir, int side)

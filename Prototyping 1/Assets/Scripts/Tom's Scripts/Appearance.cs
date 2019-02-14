@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Appearance
 {
-    public GameObject head;
-    public GameObject body;
-    public string name;
-    public int ability;
-
+    public Sprite head;
+    public int body = 0;
+    public string name = "";
+    public int ability = 1;
+    public int playerNumber;
 }
