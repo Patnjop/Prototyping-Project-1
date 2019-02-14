@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class CreatorManager : MonoBehaviour
 {
@@ -18,18 +19,24 @@ public class CreatorManager : MonoBehaviour
         {
             if (Input.GetButtonDown("Joystick " + i + " Type 1"))
             {
-                
+
+                bool playerIn = false;
+
                 foreach (CycleOption cycleOption in playerCycleOptions)
                 {
-                    if (cycleOption.playerNumber != i)
+                    if (cycleOption.playerNumber == i)
                     {
-                        continue;
+                        playerIn = true;
                     }
                 }
 
-                playerCycleOptions.Add(gameObject.AddComponent<CycleOption>());
-                playerCycleOptions[playerCycleOptions.Count - 1].playerNumber = i;
-                playerUIInfo[i-1].SetActive(true);
+                if (!playerIn)
+                {
+                    playerCycleOptions.Add(gameObject.AddComponent<CycleOption>());
+                    playerCycleOptions[playerCycleOptions.Count - 1].playerNumber = i;
+                    playerUIInfo[i - 1].SetActive(true);
+                    playerCycleOptions = playerCycleOptions.OrderBy(o => o.playerNumber).ToList();
+                }
                     
                 
             }

@@ -165,11 +165,11 @@ public class TurnManager : MonoBehaviour
 
         List<Player> players = new List<Player>(GameManager.GM.GetPlayers());
 
-        for (int i = 0; i < playerCharacterCards.Length; i++)
+        for (int i = 0; i < players.Count; i++)
         { 
             playerCharacterCards[i].nameUI.text = players[i].name;
             playerCharacterCards[i].ammoUI.text = players[i].ammo.ToString();
-            playerCharacterCards[i].headUI = heads[players[i].head];
+            playerCharacterCards[i].headUI.sprite = heads[players[i].head];
             if (players[i].turnPlacement != 0)
             {
                 playerCharacterCards[i].placementUI.text = players[i].turnPlacement.ToString();

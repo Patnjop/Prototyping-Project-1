@@ -15,6 +15,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject bulletManager;
     public List<Transform> ammoPiles;
     public int ammoToGain;
+    [SerializeField] GameObject deathFX, acidFX, TBulletFX, ammoFX, acidTile;
 
     [SerializeField] private GameObject playerObject;
     [SerializeField] private Color[] playerColours;
@@ -24,7 +25,7 @@ public class PlayerManager : MonoBehaviour
         if (GameManager.GM.firstGame)
         {
             List<GameObject> activePlayers = new List<GameObject>();
-         
+
             foreach (Player p in playerList)
             {
 
@@ -49,7 +50,7 @@ public class PlayerManager : MonoBehaviour
                     p.character.transform.GetChild(4).GetComponent<SpriteRenderer>().color = playerColours[p.playerNumber - 1];
                 }
 
-                
+
             }
             players = GameManager.GM.AddInstantiatedCharacters(activePlayers);
             aliveCount = players.Count;
@@ -89,6 +90,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (check.position == ammoPiles[i].position)
             {
+                PlayFX(ammoFX, check);
                 players[playerNum].ammo += ammoToGain;
                 Destroy(ammoPiles[i].gameObject);
                 toDestroy = i;
@@ -98,10 +100,10 @@ public class PlayerManager : MonoBehaviour
         {
             ammoPiles.Remove(ammoPiles[toDestroy]);
         }
-        
+
     }
 
-    
+
 
     private bool HitBullet(Transform check)
     {
@@ -159,8 +161,8 @@ public class PlayerManager : MonoBehaviour
                         }
                         spaceTaken = GridSpaceTaken(direction, p);
                         AmmoInSpace(direction, i);
-                        
-                        
+
+
                     }
                     else
                     {
@@ -272,7 +274,7 @@ public class PlayerManager : MonoBehaviour
     IEnumerator ChapterDoneDelay(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
-        
+
         TurnManager.EnterCombat(true);
     }
 
@@ -284,6 +286,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (players[i].playerNumber == playerNum)
             {
+                PlayFX(deathFX, players[i].character.transform);
                 players[i].alive = false;
                 players[i].character.SetActive(false);
 
@@ -312,7 +315,7 @@ public class PlayerManager : MonoBehaviour
         bool splitBullet = false;
         List<Bullet> splitIndex = new List<Bullet>();
         List<Bullet> fireIndex = new List<Bullet>();
-        
+
         foreach (Bullet b in bullets)
         {
             b.movesLeft -= 1;
@@ -324,7 +327,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 else
                 {
-                    
+
                     b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y + 1);
                 }
                 for (int p = 0; p < players.Count; p++)
@@ -345,7 +348,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 else
                 {
-                    
+
                     b.body.transform.position = new Vector2(b.body.transform.position.x + 1, b.body.transform.position.y);
                 }
                 for (int p = 0; p < players.Count; p++)
@@ -366,7 +369,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 else
                 {
-                    
+
                     b.body.transform.position = new Vector2(b.body.transform.position.x, b.body.transform.position.y - 1);
                 }
                 for (int p = 0; p < players.Count; p++)
@@ -387,7 +390,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 else
                 {
-                    
+
                     b.body.transform.position = new Vector2(b.body.transform.position.x - 1, b.body.transform.position.y);
                 }
                 for (int p = 0; p < players.Count; p++)
@@ -402,7 +405,7 @@ public class PlayerManager : MonoBehaviour
 
                 }
             }
-            
+
             //Debug.Log("Moves Left = " + b.movesLeft);
             if (b.type == 1)
             {
@@ -425,27 +428,28 @@ public class PlayerManager : MonoBehaviour
         {
             foreach (Bullet f in fireIndex)
             {
-                
+                PlayFX(acidFX, f.body.transform);
                 MakeBullet(0, new Vector2(f.body.transform.position.x, f.body.transform.position.y), 0, 1);
             }
-            
+
         }
         if (splitBullet)
         {
             foreach (Bullet s in splitIndex)
             {
+                PlayFX(TBulletFX, s.body.transform);
                 MakeBullet(GetTShotDir(s.direction, 1), new Vector2(s.body.transform.position.x, s.body.transform.position.y), 0, 2);
                 MakeBullet(GetTShotDir(s.direction, 2), new Vector2(s.body.transform.position.x, s.body.transform.position.y), 0, 2);
             }
         }
-            if (removeBullet)
+        if (removeBullet)
+        {
+            foreach (Bullet r in toRemove)
             {
-                foreach (Bullet r in toRemove)
-                {
-                    Destroy(r.body);
-                    bullets.Remove(r);
-                }
+                Destroy(r.body);
+                bullets.Remove(r);
             }
+        }
     }
 
     private void MakeBullet(int dir, Vector2 check, int playerNum = 0, int range = 0) // dont use range 1
@@ -480,18 +484,19 @@ public class PlayerManager : MonoBehaviour
             spawnPos = new Vector2(posX, posY);
         }
 
+        bool acid = false;
         if (playerNum > 0) // only not if bullets make bullets
         {
             if (length > players[playerNum - 1].range)
             {
-                
+
                 length = players[playerNum - 1].range;
                 Debug.Log("NICK SHOT " + length);
             }
             if (players[playerNum - 1].playerClass == 3 && players[playerNum - 1].special)
             {
                 length += 2;
-                
+
             }
             if (players[playerNum - 1].playerClass == 2 && players[playerNum - 1].special)
             {
@@ -508,13 +513,14 @@ public class PlayerManager : MonoBehaviour
         }
         else if (range == 1)
         {
+            acid = true;
             length = 5;
         }
         if (range == 0)
         {
             UpdateBullets();
         }
-        Debug.Log("NICK SHOT AGAIN " + length);
+        
         if (playerNum > 0)
         {
 
@@ -535,7 +541,15 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("ADDED");
         }
 
-        bullets[bullets.Count - 1].body = Instantiate(bulletGO, spawnPos, Quaternion.identity);
+        if (!acid)
+        {
+            bullets[bullets.Count - 1].body = Instantiate(bulletGO, spawnPos, Quaternion.identity);
+        }
+        else
+        {
+            bullets[bullets.Count - 1].body = Instantiate(acidTile, spawnPos, Quaternion.identity);
+
+        }
         //bullets[bullets.Count - 1].body.transform.parent = bulletManager.transform;
 
 
@@ -637,7 +651,7 @@ public class PlayerManager : MonoBehaviour
 
     public void SetAmmoPiles(GameObject ammoPileParent)
     {
-        foreach(Transform child in ammoPileParent.transform)
+        foreach (Transform child in ammoPileParent.transform)
         {
             ammoPiles.Add(child);
         }
@@ -689,6 +703,12 @@ public class PlayerManager : MonoBehaviour
                 return 1;
             }
         }
+    }
+
+    private void PlayFX(GameObject FX, Transform position)
+    {
+        GameObject particle = Instantiate(FX, position);
+        Destroy(particle, 1f);
     }
 
 }

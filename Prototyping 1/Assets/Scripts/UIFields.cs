@@ -6,7 +6,7 @@ using TMPro;
 [System.Serializable]
 public class UIFields
 {
-    public Sprite headUI;
+    public SpriteRenderer headUI;
     public TextMeshPro nameUI;
     public TextMeshPro ammoUI;
     public TextMeshPro placementUI;

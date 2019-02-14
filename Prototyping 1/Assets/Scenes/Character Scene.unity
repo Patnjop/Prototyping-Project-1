@@ -6344,6 +6344,30 @@ PrefabInstance:
       propertyPath: playerColours.Array.data[3].a
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: TBulletFX
+      value: 
+      objectReference: {fileID: 1604068019753426, guid: d765ec6e76e231646b47d389de23041e,
+        type: 3}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: acidFX
+      value: 
+      objectReference: {fileID: 1240458371015636, guid: d0216bf7b5d38c143951801cc4f1e8a5,
+        type: 3}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: deathFX
+      value: 
+      objectReference: {fileID: 1660717246901766, guid: c8182b0abefa2684faeca225f27231d4,
+        type: 3}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: ammoFX
+      value: 
+      objectReference: {fileID: 2492409585506027568, guid: 4543728ac59cb8244b7adfe404cc65d9,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c, type: 3}
 --- !u!1 &1032179019
@@ -10677,11 +10701,11 @@ MonoBehaviour:
   appearanceObjects:
   - headObject: {fileID: 216128238}
     heads:
-    - {fileID: 21300000, guid: f7709076142a93e4bbfd5738a844fb43, type: 3}
-    - {fileID: 21300000, guid: 6d357dbe9003c4448b5bbccd7ac980d0, type: 3}
-    - {fileID: 21300000, guid: a0eeaf14e162baf4f924f57f34262a1f, type: 3}
-    - {fileID: 21300000, guid: 815aa0233120cfd4b97ce38593b25b94, type: 3}
-    - {fileID: 21300000, guid: a16af628e9019fb4ebb4b8b9430bc21d, type: 3}
+    - {fileID: 21300000, guid: 014ca4d64caad20498776988227ef834, type: 3}
+    - {fileID: 21300000, guid: 7524f9c359f5a2440ac194ed45d4e84c, type: 3}
+    - {fileID: 21300000, guid: 449ba2a764522ad49b148da36fac1863, type: 3}
+    - {fileID: 21300000, guid: 85f152989d52c1e42871ee3cb04a69fb, type: 3}
+    - {fileID: 21300000, guid: 7b688685c90e93d43af0ba7b31a3202c, type: 3}
     bodyAccessories:
     - {fileID: 1001822877}
     - {fileID: 1587581965}
@@ -10689,11 +10713,11 @@ MonoBehaviour:
     infoText: {fileID: 876027311}
   - headObject: {fileID: 143807891}
     heads:
-    - {fileID: 21300000, guid: f7709076142a93e4bbfd5738a844fb43, type: 3}
-    - {fileID: 21300000, guid: 6d357dbe9003c4448b5bbccd7ac980d0, type: 3}
-    - {fileID: 21300000, guid: a0eeaf14e162baf4f924f57f34262a1f, type: 3}
-    - {fileID: 21300000, guid: 815aa0233120cfd4b97ce38593b25b94, type: 3}
-    - {fileID: 21300000, guid: a16af628e9019fb4ebb4b8b9430bc21d, type: 3}
+    - {fileID: 21300000, guid: 014ca4d64caad20498776988227ef834, type: 3}
+    - {fileID: 21300000, guid: 7524f9c359f5a2440ac194ed45d4e84c, type: 3}
+    - {fileID: 21300000, guid: 449ba2a764522ad49b148da36fac1863, type: 3}
+    - {fileID: 21300000, guid: 85f152989d52c1e42871ee3cb04a69fb, type: 3}
+    - {fileID: 21300000, guid: 7b688685c90e93d43af0ba7b31a3202c, type: 3}
     bodyAccessories:
     - {fileID: 1315965999}
     - {fileID: 1603948153}
@@ -10701,11 +10725,11 @@ MonoBehaviour:
     infoText: {fileID: 1585424484}
   - headObject: {fileID: 1409884961}
     heads:
-    - {fileID: 21300000, guid: f7709076142a93e4bbfd5738a844fb43, type: 3}
-    - {fileID: 21300000, guid: 6d357dbe9003c4448b5bbccd7ac980d0, type: 3}
-    - {fileID: 21300000, guid: a0eeaf14e162baf4f924f57f34262a1f, type: 3}
-    - {fileID: 21300000, guid: 815aa0233120cfd4b97ce38593b25b94, type: 3}
-    - {fileID: 21300000, guid: a16af628e9019fb4ebb4b8b9430bc21d, type: 3}
+    - {fileID: 21300000, guid: 014ca4d64caad20498776988227ef834, type: 3}
+    - {fileID: 21300000, guid: 7524f9c359f5a2440ac194ed45d4e84c, type: 3}
+    - {fileID: 21300000, guid: 449ba2a764522ad49b148da36fac1863, type: 3}
+    - {fileID: 21300000, guid: 85f152989d52c1e42871ee3cb04a69fb, type: 3}
+    - {fileID: 21300000, guid: 7b688685c90e93d43af0ba7b31a3202c, type: 3}
     bodyAccessories:
     - {fileID: 1101063818}
     - {fileID: 1261722030}
@@ -10713,11 +10737,11 @@ MonoBehaviour:
     infoText: {fileID: 1802274275}
   - headObject: {fileID: 2062132928}
     heads:
-    - {fileID: 21300000, guid: f7709076142a93e4bbfd5738a844fb43, type: 3}
-    - {fileID: 21300000, guid: 6d357dbe9003c4448b5bbccd7ac980d0, type: 3}
-    - {fileID: 21300000, guid: a0eeaf14e162baf4f924f57f34262a1f, type: 3}
-    - {fileID: 21300000, guid: 815aa0233120cfd4b97ce38593b25b94, type: 3}
-    - {fileID: 21300000, guid: a16af628e9019fb4ebb4b8b9430bc21d, type: 3}
+    - {fileID: 21300000, guid: 014ca4d64caad20498776988227ef834, type: 3}
+    - {fileID: 21300000, guid: 7524f9c359f5a2440ac194ed45d4e84c, type: 3}
+    - {fileID: 21300000, guid: 449ba2a764522ad49b148da36fac1863, type: 3}
+    - {fileID: 21300000, guid: 85f152989d52c1e42871ee3cb04a69fb, type: 3}
+    - {fileID: 21300000, guid: 7b688685c90e93d43af0ba7b31a3202c, type: 3}
     bodyAccessories:
     - {fileID: 2076343446}
     - {fileID: 1091148761}
