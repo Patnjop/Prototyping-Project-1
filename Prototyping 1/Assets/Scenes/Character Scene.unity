@@ -6368,6 +6368,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2492409585506027568, guid: 4543728ac59cb8244b7adfe404cc65d9,
         type: 3}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: acidTile
+      value: 
+      objectReference: {fileID: 7142851142916872340, guid: b20fa45744b1a0243912da69baa8e5d1,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c, type: 3}
 --- !u!1 &1032179019
