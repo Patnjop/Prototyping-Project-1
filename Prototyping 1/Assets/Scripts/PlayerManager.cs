@@ -519,6 +519,14 @@ public class PlayerManager : MonoBehaviour
         bullets[bullets.Count - 1].body = Instantiate(bulletGO, spawnPos, Quaternion.identity);
         //bullets[bullets.Count - 1].body.transform.parent = bulletManager.transform;
 
+        if (bullets[bullets.Count - 1].body.transform.parent == bulletManager.transform)
+        {
+            Debug.Log("Parented");
+        }
+        else
+        {
+            Debug.Log("not");
+        }
 
         if (bullets[bullets.Count - 1].type == 3)
         {
