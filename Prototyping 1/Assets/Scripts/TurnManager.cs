@@ -15,9 +15,10 @@ public class TurnManager : MonoBehaviour
     private List<Move> moves = new List<Move>();
     private Queue<Move> movesQueue = new Queue<Move>();
     public GameObject[] playerTurnInfo;
-    public GameObject inputInfo, worldCanvas;
-    private List<GameObject> infoObjectList = new List<GameObject>();
+    public UIFields[] playerCharacterCards;
+    public Sprite[] heads;
     public int movesPerTurn;
+    private int readyPlacement;
 
 
 
@@ -43,40 +44,38 @@ public class TurnManager : MonoBehaviour
 
     public void StartNewGame()
     {
-        
+
 
         for (int i = 0; i < playerAmount; i++)
         {
 
             playerInputs[i].GetInput();
             playerTurnInfo[i].SetActive(true);
-            //infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
+
 
         }
     }
 
     public void StartRound() // needs playerAmount?
     {
+        readyPlacement = 0;
+        List<Player> players = new List<Player>(GameManager.GM.GetPlayers());
+        foreach (Player p in players)
+        {
+            p.turnPlacement = 0;
+        }
+        RefreshCharacterCards();
         moves = new List<Move>();
         playerAmount = playerManager.PlayerAmount();
         for (int i = 0; i < playerAmount; i++)
         {
-            
-            
-            if (infoObjectList.Count == 0)
+            if (playerManager.PlayerAlive(i + 1))
             {
                 playerInputs[i].GetInput();
                 playerTurnInfo[i].SetActive(true);
-                //infoObjectList.Add(Instantiate(inputInfo, playerManager.GetPlayerPos(i), Quaternion.identity, worldCanvas.transform));
-            }
-            else if (playerManager.PlayerAlive(i + 1) && infoObjectList.Count > 0)
-            {
-                playerInputs[i].GetInput();
-                playerTurnInfo[i].SetActive(true);
-                //infoObjectList[i].SetActive(true);
-                //infoObjectList[i].transform.position = playerManager.GetPlayerPos(i);
                 playerTurnInfo[i].GetComponentInChildren<TextMeshProUGUI>().text = "0/3";
             }
+
 
         }
     }
@@ -84,22 +83,28 @@ public class TurnManager : MonoBehaviour
     public void FillCircle(int playerNum, float amount, float max)
     {
         playerTurnInfo[playerNum - 1].GetComponentInChildren<Image>().fillAmount = (amount / max);
+
     }
 
     public void IncrementInfo(int playerNum, int amount)
     {
         playerTurnInfo[playerNum - 1].GetComponentInChildren<TextMeshProUGUI>().text = amount + "/3";
+
     }
 
     public void AddPlayerMoves(List<Move> moveList, int playerNum)
     {
+        List<Player> players = new List<Player>(GameManager.GM.GetPlayers());
+        readyPlacement += 1;
+        players[playerNum - 1].turnPlacement = readyPlacement;
+
         playerTurnInfo[playerNum - 1].GetComponentInChildren<TextMeshProUGUI>().text = "Ready!";
         moves.AddRange(moveList);
         moves = moves.OrderBy(o => o.moveNumber).ToList();
-        
+
         if (moves.Count == (playerAmount * movesPerTurn))
         {
-            foreach (GameObject game in infoObjectList)
+            foreach (GameObject game in playerTurnInfo)
             {
                 game.SetActive(false);
             }
@@ -111,8 +116,8 @@ public class TurnManager : MonoBehaviour
     public void EnterCombat(bool bulletsCleared = false)
     {
         Debug.Log("Bullets cleared = " + bulletsCleared);
-        if((movesQueue.Count == (playerAmount * movesPerTurn) - playerAmount 
-            || movesQueue.Count == (playerAmount * movesPerTurn) - playerAmount * 2 
+        if ((movesQueue.Count == (playerAmount * movesPerTurn) - playerAmount
+            || movesQueue.Count == (playerAmount * movesPerTurn) - playerAmount * 2
             || movesQueue.Count == (playerAmount * movesPerTurn) - playerAmount * 3) && bulletsCleared == false)
         {
             playerManager.CheckCombatChapter();
@@ -129,8 +134,8 @@ public class TurnManager : MonoBehaviour
         {
             StartRound();
         }
-        
-  
+
+
     }
 
     private void MakeMove(Move move)// moves[index]
@@ -144,6 +149,38 @@ public class TurnManager : MonoBehaviour
             else if (move.moveType == 2)
             {
                 playerManager.ShootPlayer(move.player, move.direction);
+            }
+        }
+    }
+
+    public void RefreshCharacterCards(int placement = 0, int characterCardAmount = 0)
+    {
+        if (characterCardAmount > 0)
+        {
+            for(int i = 0; i < characterCardAmount; i++)
+            {
+                playerCharacterCards[i].characterCard.SetActive(true);
+            }
+        }
+
+        List<Player> players = new List<Player>(GameManager.GM.GetPlayers());
+
+        for (int i = 0; i < playerCharacterCards.Length; i++)
+        { 
+            playerCharacterCards[i].nameUI.text = players[i].name;
+            playerCharacterCards[i].ammoUI.text = players[i].ammo.ToString();
+            playerCharacterCards[i].headUI = heads[players[i].head];
+            if (players[i].turnPlacement != 0)
+            {
+                playerCharacterCards[i].placementUI.text = players[i].turnPlacement.ToString();
+            }
+            else
+            {
+                playerCharacterCards[i].placementUI.text = "";
+            }
+            if (players[i].alive == false)
+            {
+                playerCharacterCards[i].deadX.SetActive(true);
             }
         }
     }

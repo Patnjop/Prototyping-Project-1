@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -30,12 +31,29 @@ public class PlayerManager : MonoBehaviour
                 p.character = Instantiate(playerObject, spawnLocation[p.playerNumber - 1], Quaternion.identity) as GameObject;
                 p.character.SetActive(true);
                 activePlayers.Add(p.character);
+                p.character.transform.GetChild(1).GetComponent<SpriteRenderer>().sprite = TurnManager.heads[p.head];
 
+                if (p.body == 0)
+                {
+                    p.character.transform.GetChild(0).gameObject.SetActive(true);
+                    p.character.transform.GetChild(0).GetComponent<SpriteRenderer>().color = playerColours[p.playerNumber - 1];
+                }
+                else if (p.body == 1)
+                {
+                    p.character.transform.GetChild(3).gameObject.SetActive(true);
+                    p.character.transform.GetChild(3).GetComponent<SpriteRenderer>().color = playerColours[p.playerNumber - 1];
+                }
+                else if (p.body == 2)
+                {
+                    p.character.transform.GetChild(4).gameObject.SetActive(true);
+                    p.character.transform.GetChild(4).GetComponent<SpriteRenderer>().color = playerColours[p.playerNumber - 1];
+                }
 
-
+                
             }
             players = GameManager.GM.AddInstantiatedCharacters(activePlayers);
             aliveCount = players.Count;
+            TurnManager.RefreshCharacterCards(0, aliveCount);
         }
         else
         {
@@ -297,6 +315,7 @@ public class PlayerManager : MonoBehaviour
         
         foreach (Bullet b in bullets)
         {
+            b.movesLeft -= 1;
             if (b.direction == 1)
             {
                 if (b.type == 2 && b.body.transform.position.y >= 0)
@@ -310,7 +329,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 for (int p = 0; p < players.Count; p++)
                 {
-                    if ((b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
+                    if (b.movesLeft != 0 && (b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
                     {
                         KillPlayer(players[p].playerNumber);
                         toRemove.Add(b);
@@ -331,7 +350,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 for (int p = 0; p < players.Count; p++)
                 {
-                    if ((b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
+                    if (b.movesLeft != 0 && (b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
                     {
                         KillPlayer(players[p].playerNumber);
                         toRemove.Add(b);
@@ -352,7 +371,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 for (int p = 0; p < players.Count; p++)
                 {
-                    if ((b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
+                    if (b.movesLeft != 0 && (b.body.transform.position.y) == players[p].character.transform.position.y && b.body.transform.position.x == players[p].character.transform.position.x && players[p].alive)
                     {
                         KillPlayer(players[p].playerNumber);
                         toRemove.Add(b);
@@ -374,7 +393,7 @@ public class PlayerManager : MonoBehaviour
                 for (int p = 0; p < players.Count; p++)
                 {
 
-                    if ((b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
+                    if (b.movesLeft != 0 && (b.body.transform.position.x) == players[p].character.transform.position.x && b.body.transform.position.y == players[p].character.transform.position.y && players[p].alive)
                     {
                         KillPlayer(players[p].playerNumber);
                         toRemove.Add(b);
@@ -383,7 +402,7 @@ public class PlayerManager : MonoBehaviour
 
                 }
             }
-            b.movesLeft -= 1;
+            
             //Debug.Log("Moves Left = " + b.movesLeft);
             if (b.type == 1)
             {
@@ -519,14 +538,6 @@ public class PlayerManager : MonoBehaviour
         bullets[bullets.Count - 1].body = Instantiate(bulletGO, spawnPos, Quaternion.identity);
         //bullets[bullets.Count - 1].body.transform.parent = bulletManager.transform;
 
-        if (bullets[bullets.Count - 1].body.transform.parent == bulletManager.transform)
-        {
-            Debug.Log("Parented");
-        }
-        else
-        {
-            Debug.Log("not");
-        }
 
         if (bullets[bullets.Count - 1].type == 3)
         {

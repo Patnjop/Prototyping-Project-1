@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public bool firstGame = true;
     public UIManager UIManager;
     public int[] playerScores;
-    
+
 
     //[SerializeField] private bool debugMode;
 
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         PlayerManager = GetComponentInChildren<PlayerManager>();
 
-        
+
     }
 
     public void SetGameData(List<Player> playerList) //Done in character creator
@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Clone");
             storedPlayers.Add(new Player(p.playerNumber, p.name, p.head, p.body, p.playerClass, p.character));
         }
-        
+
     }
 
     public void StartGame(TurnManager turnManager)
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
         {
             p.character.SetActive(true);
         }*/
-        UIManager.SetScores(playerScores);
+        //UIManager.SetScores(playerScores);
     }
 
     public void NewGame()
@@ -106,19 +106,19 @@ public class GameManager : MonoBehaviour
         foreach (Player p in players)
         {
             playerScores[p.playerNumber - 1] += p.points;
-            if (p.points == 20)
+            if (p.points == 4)
             {
                 gameOver = true;
                 winnerNum = p.playerNumber;
             }
         }
         if (!gameOver)
-        {
+        {/*
             firstGame = false;
             players = storedPlayers;
             Destroy(gameObject.transform.GetChild(0).gameObject);
             Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
-            UIManager.SetScores(playerScores);
+            UIManager.SetScores(playerScores);*/
         }
         else
         {

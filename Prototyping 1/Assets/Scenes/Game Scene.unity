@@ -1686,6 +1686,11 @@ PrefabInstance:
       propertyPath: m_Color.g
       value: 0.007814187
       objectReference: {fileID: 0}
+    - target: {fileID: 6789770020534731366, guid: 8897ab8c02eb0b3409e0b916e52c438e,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8897ab8c02eb0b3409e0b916e52c438e, type: 3}
 --- !u!1 &468757747 stripped
@@ -2761,9 +2766,37 @@ MonoBehaviour:
   - {fileID: 1862246934}
   - {fileID: 468757747}
   - {fileID: 1240530561}
-  inputInfo: {fileID: 8176637225674645446, guid: 8897ab8c02eb0b3409e0b916e52c438e,
-    type: 3}
-  worldCanvas: {fileID: 1330768256}
+  playerCharacterCards:
+  - headUI: {fileID: 0}
+    nameUI: {fileID: 0}
+    ammoUI: {fileID: 0}
+    placementUI: {fileID: 0}
+    characterCard: {fileID: 0}
+    deadX: {fileID: 0}
+  - headUI: {fileID: 0}
+    nameUI: {fileID: 0}
+    ammoUI: {fileID: 0}
+    placementUI: {fileID: 0}
+    characterCard: {fileID: 0}
+    deadX: {fileID: 0}
+  - headUI: {fileID: 0}
+    nameUI: {fileID: 0}
+    ammoUI: {fileID: 0}
+    placementUI: {fileID: 0}
+    characterCard: {fileID: 0}
+    deadX: {fileID: 0}
+  - headUI: {fileID: 0}
+    nameUI: {fileID: 0}
+    ammoUI: {fileID: 0}
+    placementUI: {fileID: 0}
+    characterCard: {fileID: 0}
+    deadX: {fileID: 0}
+  heads:
+  - {fileID: 21300000, guid: f7709076142a93e4bbfd5738a844fb43, type: 3}
+  - {fileID: 21300000, guid: 6d357dbe9003c4448b5bbccd7ac980d0, type: 3}
+  - {fileID: 21300000, guid: a0eeaf14e162baf4f924f57f34262a1f, type: 3}
+  - {fileID: 21300000, guid: 815aa0233120cfd4b97ce38593b25b94, type: 3}
+  - {fileID: 21300000, guid: a16af628e9019fb4ebb4b8b9430bc21d, type: 3}
   movesPerTurn: 3
 --- !u!4 &763974649
 Transform:
@@ -7162,9 +7195,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: '5
-
-'
+  m_text: 5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7233,9 +7264,9 @@ MonoBehaviour:
   m_margin: {x: 17.66407, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1837727546}
-    characterCount: 2
+    characterCount: 1
     spriteCount: 0
-    spaceCount: 1
+    spaceCount: 0
     wordCount: 1
     linkCount: 0
     lineCount: 1
@@ -8004,7 +8035,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Player 1 = 0 | Player 2 = 0 | Player 3 = 0 | Player 4 = 0
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8073,13 +8104,13 @@ MonoBehaviour:
   m_margin: {x: -365.49335, y: -74.4203, z: -313.5298, w: -43.411858}
   m_textInfo:
     textComponent: {fileID: 1972852853}
-    characterCount: 57
+    characterCount: 0
     spriteCount: 0
-    spaceCount: 18
-    wordCount: 12
+    spaceCount: 0
+    wordCount: 0
     linkCount: 0
-    lineCount: 1
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
@@ -8729,9 +8760,101 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
+      propertyPath: players.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
       propertyPath: UIManager
       value: 
       objectReference: {fileID: 1325783225}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[2].playerNumber
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[2].alive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[2].name
+      value: Waffle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[2].character
+      value: 
+      objectReference: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
+        type: 3}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[2].playerClass
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[2].special
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[2].ammo
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[2].range
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[3].playerNumber
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[3].alive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[3].name
+      value: Waffle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[3].character
+      value: 
+      objectReference: {fileID: 8674513822574860410, guid: bfddfe3027708d740b6266844b43b6f7,
+        type: 3}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[3].playerClass
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[3].special
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[3].ammo
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496715255362711984, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: players.Array.data[3].range
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
         type: 3}
       propertyPath: map
@@ -8762,5 +8885,85 @@ PrefabInstance:
       propertyPath: ammoPiles.Array.data[3]
       value: 
       objectReference: {fileID: 1553854533}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[0].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[0].g
+      value: 0.2028302
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[0].b
+      value: 0.2028302
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[0].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[1].r
+      value: 0.2028302
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[1].g
+      value: 0.4108059
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[1].b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[1].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[2].r
+      value: 0.36619312
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[2].g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[2].b
+      value: 0.1745283
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[2].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[3].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[3].g
+      value: 0.9874151
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[3].b
+      value: 0.1745283
+      objectReference: {fileID: 0}
+    - target: {fileID: 674178619138514349, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c,
+        type: 3}
+      propertyPath: playerColours.Array.data[3].a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ad427fe5a1a5f64db2bbc1e87b5f95c, type: 3}

@@ -16,6 +16,7 @@ public class Player
     public bool special = false;
     public int ammo = 0;
     public int range;
+    public int turnPlacement = 0;
     
     public Player (int playerNo, string charName, int playerHead, int playerBody, int classNum, GameObject optChar = null) // Add more
     {
