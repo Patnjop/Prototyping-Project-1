@@ -12,9 +12,14 @@ public class CreatorManager : MonoBehaviour
     [SerializeField] private GameObject[] playerUIInfo;
     private List<Player> players = new List<Player>();
     [SerializeField] private GameObject[] readyCovers;
-
+    [SerializeField] private AudioSource tickSound;
     private void Update()
     {
+        if (Input.anyKeyDown)
+        {
+            tickSound.Play();
+        }
+
         for (int i = 1; i < 5; i++)
         {
             if (Input.GetButtonDown("Joystick " + i + " Type 1"))
@@ -48,19 +53,19 @@ public class CreatorManager : MonoBehaviour
         string abilityName = "";
         if (appearance.ability == 1)
         {
-            abilityName = "Fire Bullet";
+            abilityName = "Acid Shot (5)";
         }
         else if (appearance.ability == 2)
         {
-            abilityName = "Wrap Bullet";
+            abilityName = "Wrap Shot (2)";
         }
         else if (appearance.ability == 3)
         {
-            abilityName = "Recoil Bullet";
+            abilityName = "Recoil Shot (3)";
         }
         else if (appearance.ability == 4)
         {
-            abilityName = "T Bullet";
+            abilityName = "T Shot (5)";
         }
         appearanceObjects[appearance.playerNumber - 1].infoText.text = "Name: " + appearance.name + "\n\nHead Type: " + head + "\n\nBody Type: " + body + "\n\nAbility: " + abilityName;
         

@@ -97,6 +97,7 @@ public class TurnManager : MonoBehaviour
         List<Player> players = new List<Player>(GameManager.GM.GetPlayers());
         readyPlacement += 1;
         players[playerNum - 1].turnPlacement = readyPlacement;
+        RefreshCharacterCards();
 
         playerTurnInfo[playerNum - 1].GetComponentInChildren<TextMeshProUGUI>().text = "Ready!";
         moves.AddRange(moveList);
@@ -172,7 +173,7 @@ public class TurnManager : MonoBehaviour
             playerCharacterCards[i].headUI.sprite = heads[players[i].head];
             if (players[i].turnPlacement != 0)
             {
-                playerCharacterCards[i].placementUI.text = players[i].turnPlacement.ToString();
+                playerCharacterCards[i].placementUI.text = players[i].turnPlacement.ToString() + ". " + players[i].name;
             }
             else
             {

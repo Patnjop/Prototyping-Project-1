@@ -20,6 +20,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject playerObject;
     [SerializeField] private Color[] playerColours;
 
+    [SerializeField] AudioSource moveSound, gunShotSound, deathSound, ammoPickupSound;
+
     public void SpawnPlayers(List<Player> playerList)
     {
         if (GameManager.GM.firstGame)
@@ -94,6 +96,7 @@ public class PlayerManager : MonoBehaviour
                 players[playerNum].ammo += ammoToGain;
                 Destroy(ammoPiles[i].gameObject);
                 toDestroy = i;
+                ammoPickupSound.Play();
             }
         }
         if (toDestroy != -1)
@@ -120,6 +123,7 @@ public class PlayerManager : MonoBehaviour
 
     public void MovePlayer(int p, int dir, bool dontUpdate = false) // p = player number
     {
+        moveSound.Play();
         Debug.Log("Moving player: " + p + " in direction " + dir);
         Debug.Log("Player " + 1 + " x,y: " + players[0].character.transform.position.x + "," + players[0].character.transform.position.y);
         for (int i = 0; i < players.Count; i++)
@@ -289,6 +293,7 @@ public class PlayerManager : MonoBehaviour
                 PlayFX(deathFX, players[i].character.transform);
                 players[i].alive = false;
                 players[i].character.SetActive(false);
+                deathSound.Play();
 
                 aliveCount -= 1;
                 if (aliveCount == 2)
@@ -520,7 +525,7 @@ public class PlayerManager : MonoBehaviour
         {
             UpdateBullets();
         }
-        
+
         if (playerNum > 0)
         {
 
@@ -557,6 +562,16 @@ public class PlayerManager : MonoBehaviour
         {
             MovePlayer(playerNum, GetRecoilDir(dir), true);
         }
+
+        for (int p = 0; p < players.Count; p++)
+        {
+            if (bullets[bullets.Count - 1].body.transform == players[p].character.transform)
+            {
+                KillPlayer(players[p].playerNumber);
+            }
+        }
+
+        gunShotSound.Play();
     }
 
     public void ShootPlayer(int p, int dir)
@@ -707,7 +722,9 @@ public class PlayerManager : MonoBehaviour
 
     private void PlayFX(GameObject FX, Transform position)
     {
-        GameObject particle = Instantiate(FX, position);
+        GameObject particle = Instantiate(FX, new Vector3(position.position.x, position.position.y), Quaternion.identity);
+        print("spawned");
+        //Debug.Break();
         Destroy(particle, 1f);
     }
 

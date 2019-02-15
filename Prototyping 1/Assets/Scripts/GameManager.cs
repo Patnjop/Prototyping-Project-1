@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public bool firstGame = true;
     public UIManager UIManager;
     public int[] playerScores;
+    [SerializeField] AudioSource creationScene;
+    [SerializeField] AudioSource gameScene;
 
 
     //[SerializeField] private bool debugMode;
@@ -38,7 +40,7 @@ public class GameManager : MonoBehaviour
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
         PlayerManager = GetComponentInChildren<PlayerManager>();
-
+        creationScene.Play();
 
     }
 
@@ -48,7 +50,8 @@ public class GameManager : MonoBehaviour
         playerAmount = players.Count;
         playerScores = new int[playerAmount];
         players = players.OrderBy(o => o.playerNumber).ToList();
-
+        creationScene.Pause();
+        gameScene.Play();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
